@@ -1,0 +1,65 @@
+sources:
+  - name: Baeldung Java Weekly
+    type: newsletter
+    priority: high
+    topics: [java, spring, architecture, engineering]
+  - name: InfoQ
+    type: publication
+    priority: high
+    topics: [architecture, java, distributed-systems, ai]
+  - name: Martin Fowler
+    type: independent
+    priority: high
+    topics: [architecture, software-engineering, ai-development]
+  - name: Thoughtworks Technology Radar
+    type: publication
+    priority: high
+    topics: [architecture, engineering-practice, emerging-tech]
+  - name: Simon Willison
+    type: independent
+    priority: high
+    topics: [ai, coding-agents, agentic-engineering]
+  - name: Latent Space / AI Engineer
+    type: publication
+    priority: high
+    topics: [ai-engineering, agents, models, evals]
+  - name: Foojay
+    type: publication
+    priority: medium
+    topics: [java, jvm, java-ai]
+  - name: Inside Java
+    type: primary
+    priority: high
+    topics: [java, jvm, openjdk]
+  - name: Spring
+    type: primary
+    priority: high
+    topics: [spring, java, ai, agents]
+  - name: Quarkus
+    type: primary
+    priority: medium
+    topics: [java, cloud-native, ai, agents]
+  - name: OpenAI Engineering and Research
+    type: primary
+    priority: high
+    topics: [ai, agents, coding-agents, models]
+  - name: Anthropic Engineering and Research
+    type: primary
+    priority: high
+    topics: [ai, agents, coding-agents, models, safety]
+  - name: Cloudflare Engineering
+    type: engineering-blog
+    priority: high
+    topics: [distributed-systems, platform, networking, ai]
+  - name: Meta Engineering
+    type: engineering-blog
+    priority: medium
+    topics: [scale, distributed-systems, ai]
+  - name: Amazon Builders' Library
+    type: engineering-library
+    priority: high
+    topics: [distributed-systems, reliability, architecture]
+  - name: Stripe Engineering
+    type: engineering-blog
+    priority: high
+    topics: [api-design, distributed-systems, developer-experience, ai]
