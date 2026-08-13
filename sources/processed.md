@@ -17,3 +17,8 @@ This is the deduplication ledger for intake runs. A source listed here or in an 
 | 2026-08-09 | Event-Driven.io | Fixing bugs in Event Sourcing is hard | https://event-driven.io/en/fixing-bugs-in-event-sourcing-is-hard/ | evidence-only — provenance enables targeted corrective events |
 | 2026-08-09 | Foojay | Idempotent Spring Boot Starter | https://foojay.io/today/idempotent-spring-boot-starter/ | evidence-only — idempotency is not exactly-once by default |
 | 2026-08-09 | Quarkus | Faster, leaner, predictable Quarkus | https://quarkus.io/blog/quarkus-insights-255-faster-leaner-predictable-quarkus/ | skipped for canonical guidance — useful benchmark but workload-specific |
+| 2026-08-13 | Hibernate ORM 7.1 | `org.hibernate.annotations.Immutable` Javadoc | https://docs.hibernate.org/orm/7.1/javadocs/org/hibernate/annotations/Immutable.html | incorporated — concrete ORM annotation and behavior |
+| 2026-08-13 | Spring AI | Tool Search Tool / `ToolSearchToolCallingAdvisor` | https://docs.spring.io/spring-ai/reference/2.0-SNAPSHOT/api/tools/tool-search-tool.html | incorporated — concrete dynamic tool discovery setup |
+| 2026-08-13 | Spring | Tool Calling in Spring AI 2.0 | https://spring.io/blog/2026/06/15/spring-ai-composable-tool-calling/ | evidence-for-existing-entry — setup and version details for tool search |
+| 2026-08-13 | Gloaguen et al. | Coding Agents Don't Know When to Act | https://arxiv.org/abs/2605.07769 | incorporated — reproduce/abstain rule for bug-fix agents |
+| 2026-08-13 | Xu et al. | Preventing Premature Commitment in Coding Agents with an Evidence-Conditioned Execution Layer | https://arxiv.org/abs/2607.28815 | incorporated — structured evidence gate before edits/submission |
