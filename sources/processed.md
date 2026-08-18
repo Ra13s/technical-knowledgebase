@@ -22,3 +22,12 @@ This is the deduplication ledger for intake runs. A source listed here or in an 
 | 2026-08-13 | Spring | Tool Calling in Spring AI 2.0 | https://spring.io/blog/2026/06/15/spring-ai-composable-tool-calling/ | evidence-for-existing-entry — setup and version details for tool search |
 | 2026-08-13 | Gloaguen et al. | Coding Agents Don't Know When to Act | https://arxiv.org/abs/2605.07769 | incorporated — reproduce/abstain rule for bug-fix agents |
 | 2026-08-13 | Xu et al. | Preventing Premature Commitment in Coding Agents with an Evidence-Conditioned Execution Layer | https://arxiv.org/abs/2607.28815 | incorporated — structured evidence gate before edits/submission |
+| 2026-08-17 | Hibernate ORM | `@EmbeddedTable` Javadoc | https://docs.hibernate.org/orm/7.2/javadocs/org/hibernate/annotations/EmbeddedTable.html | incorporated — concrete secondary-table mapping annotation |
+| 2026-08-17 | Hibernate ORM | Releases and compatibility matrix | https://hibernate.org/orm/releases/ | evidence-for-existing-entry — version/Spring Boot compatibility for `@EmbeddedTable` |
+| 2026-08-17 | Oracle Java SE 26 | JLS Chapter 13: Binary Compatibility | https://docs.oracle.com/en/java/javase/26/docs/specs/jls/jls-13.html | incorporated — concrete sealed-API switch compatibility rule |
+| 2026-08-17 | Oracle Java SE 26 | `java.lang.MatchException` | https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/lang/MatchException.html | evidence-for-existing-entry — runtime failure mode for stale exhaustive switches |
+| 2026-08-17 | Model Context Protocol | The 2026-07-28 Specification | https://blog.modelcontextprotocol.io/posts/2026-07-28/ | incorporated — concrete request-contract changes for MCP migrations |
+| 2026-08-17 | Inside Java | Evolving a Java MCP Server During MCP Specification Upgrades | https://inside.java/2026/08/12/java-mcp-migration/ | incorporated — compatibility adapter and dual-path test recipe |
+| 2026-08-17 | Model Context Protocol | MCP Conformance Test Framework | https://github.com/modelcontextprotocol/conformance | incorporated — executable client/server conformance checks |
+| 2026-08-17 | OpenAI | How agents are transforming work | https://openai.com/index/how-agents-are-transforming-work/ | skipped-not-actionable — adoption/task-horizon evidence without a reusable implementation technique |
+| 2026-08-17 | OpenJDK | Convenience Methods for JSON Documents (draft JEP) | https://openjdk.org/jeps/8344154 | skipped-low-confidence — draft/incubating API; no production recommendation yet |
