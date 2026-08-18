@@ -1,41 +1,81 @@
 # Knowledgebase contribution rules
 
-This repository stores synthesized engineering knowledge, not a bookmark collection.
+This repository stores **reusable engineering techniques**, not interesting technical reading.
 
-## Intake rule
+## Admission test
+
+Before creating or expanding canonical knowledge, answer:
+
+> Could we reasonably use this in a real development task? What exactly would we do differently?
+
+If there is no concrete answer, do not add it to canonical knowledge.
+
+Good candidates include:
+
+- APIs, annotations and language/framework capabilities
+- libraries and tools
+- code and configuration patterns
+- commands and diagnostic recipes
+- implementation and migration recipes
+- tests, checks and verification techniques
+- coding-agent instructions, harness rules and workflows
+- concrete architecture patterns with an implementable recipe
+- decision rules that lead to a specific engineering action
+
+Usually reject:
+
+- technology trends and release-news summaries
+- broad architectural principles without an implementation recipe
+- predictions about how engineering roles are changing
+- framework comparisons without a concrete decision or experiment
+- facts that are useful to know but do not change what we would build or do
+
+`Interesting` is not a disposition for canonical knowledge. Log it as `skipped-not-actionable` and move on.
+
+## Canonical entry shape
+
+Keep entries short enough to use during development. Include, where applicable:
+
+1. **What it is**
+2. **Use when**
+3. **How to use it** — preferably code, config, command or prompt
+4. **Why it is useful**
+5. **Caveats / when not to use**
+6. **Version / compatibility**
+7. **Sources** — prefer primary documentation
+8. **Related entries**
+
+Organize entries by what a developer will search for later, not by newsletter, publication or intake date. One focused capability or recipe per page is usually better than a broad essay.
+
+## Evidence
+
+Claims must remain traceable to sources. Prefer primary documentation for API and framework behavior. Independent experiments and papers are useful for workflow techniques, but state their measured result rather than generalizing beyond the evidence.
+
+A vendor source can establish what a vendor feature does; it is not automatically neutral evidence that the feature is superior.
+
+## Source intake
 
 Before processing a source, check `sources/processed.md` and open intake PRs. Do not process the same source twice.
 
-For newsletters, follow high-value linked articles and use the deeper source as evidence where possible.
+For newsletters, use the newsletter as discovery and follow worthwhile linked articles or primary documentation. Extract reusable things, not the newsletter theme.
 
-## Canonical pages
+Use dispositions such as:
 
-Prefer updating an existing canonical page over creating a page for every article. Canonical pages should distinguish, where relevant:
+- `incorporated`
+- `evidence-for-existing-entry`
+- `skipped-not-actionable`
+- `skipped-duplicate`
+- `skipped-low-confidence`
 
-- Current understanding
-- External evidence
-- Our position / interpretation
-- Confidence and limitations
-- Counter-evidence or tensions
-- Practical implications
-- Experiments
-- Open questions
-- Sources
-
-Claims should remain traceable to source URLs. Vendor sources are valuable primary evidence but should not automatically be treated as neutral evaluation.
-
-## Selection standard
-
-A source deserves canonical changes when it contributes at least one of:
-
-- genuinely new knowledge
-- meaningful evidence for or against an existing position
-- a useful refinement or limitation
-- a practical engineering implication
-- a worthwhile experiment
-
-Low-novelty news and repeated claims should be logged and skipped rather than inflating the knowledgebase.
+The source log is for deduplication; it is not the knowledgebase.
 
 ## Intake notes
 
-Each intake run gets a short note under `intakes/` explaining what changed in our model of engineering, not merely what links were read.
+Each intake run gets a short note under `intakes/` containing only:
+
+- new things we can use now
+- existing entries improved
+- rejected non-actionable material
+- concrete experiments worth trying
+
+Zero canonical additions is a valid result. Never add filler to make a run look productive.
