@@ -70,7 +70,7 @@ Step summarizeOrders(JobRepository jobRepository,
 }
 ```
 
-The Spring Batch job still owns orchestration, execution metadata, retries/restarts at the step level, and sequencing. DuckDB owns the analytical transform inside the step.
+Spring Batch still owns job/step orchestration, execution metadata, sequencing, and whether a failed step is eligible to run again. DuckDB owns the analytical transform inside the step. If the transform itself needs retry behavior, define that deliberately rather than assuming item-level retry semantics carry over to a Tasklet.
 
 ## Decision rule
 
@@ -85,7 +85,7 @@ A published comparison using Java 21 and DuckDB 1.5.5 reported roughly 6x speedu
 - Make file/object locations job parameters rather than hard-coded paths.
 - Do not concatenate untrusted values into SQL. Use parameters for scalar values and validate/allow-list identifiers or file locations that must become SQL syntax.
 - For file outputs that downstream systems consume, prefer writing to a temporary output and promoting/renaming it only after the step succeeds, so a failed run does not expose a partial artifact.
-- Decide what restart means. A Tasklet gives a coarser restart boundary than chunk processing; make the SQL/output operation idempotent or clean up prior partial results before retry.
+- Decide what restart means. A Tasklet gives a coarser restart boundary than chunk processing; make the SQL/output operation idempotent or clean up prior partial results before rerunning the step.
 - Benchmark with the actual source format and storage. Local CSV performance does not predict remote object-store or database-scanner performance.
 
 ## Why it is useful
