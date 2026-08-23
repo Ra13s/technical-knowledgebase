@@ -85,7 +85,7 @@ The commands above give both humans and agents a repeatable way to inspect what 
 
 ## Sources
 
-- https://foojay.io/today/vibe-coding-maven-and-the-dependencies-you-didnt-choose/
+- https://nljug.org/foojay/vibe-coding-maven-and-the-dependencies-you-didnt-choose/
 - https://maven.apache.org/plugins/maven-dependency-plugin/usage.html
 - https://maven.apache.org/plugins/maven-dependency-plugin/resolve-plugins-mojo.html
 - https://maven.apache.org/plugins/maven-help-plugin/
