@@ -21,6 +21,7 @@ If the answer is vague, the item belongs in the processed-source log, not canoni
 
 ### Spring / Java
 
+- [`Spring Boot outbound SSRF mitigation with InetAddressFilter`](topics/spring/spring-boot-inetaddressfilter-ssrf.md) — filter resolved outbound HTTP destinations globally or per client, with explicit CIDR policies and tests.
 - [`Spring Data type-safe property paths`](topics/spring/spring-data-typed-property-paths.md) — replace compile-time-known string property names with refactoring-safe method references and typed nested paths.
 - [`JSpecify + NullAway null-safety`](topics/spring/jspecify-null-safety.md) — make packages non-null by default with `@NullMarked`, mark nullable type uses explicitly and optionally fail the build on contract violations.
 - [`DuckDB for set-based Spring Batch transforms`](topics/spring/spring-batch-duckdb-transforms.md) — replace large in-memory grouping/join/aggregation loops with an embedded analytical SQL step when the workload fits.
@@ -33,9 +34,14 @@ If the answer is vague, the item belongs in the processed-source log, not canoni
 ### Coding agents / AI protocols
 
 - [`Evidence-gated coding-agent edits`](topics/ai/evidence-gated-coding-agent-edits.md) — require observable evidence before bug-fix agents edit code or submit a patch, and make “no code change required” a valid successful outcome.
+- [`Bind agent approvals to the exact side effect`](topics/ai/enforcement-bound-agent-approvals.md) — require mandatory human approval at the execution boundary, bind it to exact arguments/target/identity/expiry, and revalidate before executing.
 - [`Review AI-generated Maven build changes`](topics/ai/review-ai-generated-maven-build-changes.md) — inspect dependency tree, effective POM/settings and plugin dependencies whenever an agent changes Maven build configuration.
 - [`OpenAI Programmatic Tool Calling`](topics/ai/openai-programmatic-tool-calling.md) — use generated code for bounded deterministic tool-call reduction while keeping approval-, semantic- and citation-sensitive work direct.
 - [`MCP protocol upgrades and conformance`](topics/ai/mcp-protocol-upgrades-and-conformance.md) — isolate protocol-version adapters at the boundary, test old/new contracts and run the official MCP conformance suite in CI.
+
+### Testing / API contracts
+
+- [`Microcks Testcontainers contract testing`](topics/testing/microcks-testcontainers-contract-tests.md) — generate mocks and provider conformance tests from the same OpenAPI/AsyncAPI artifact inside local JUnit/CI tests.
 
 ### Platform / CI / dependency automation
 
