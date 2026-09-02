@@ -57,20 +57,69 @@ Before allowing an edit or final PR submission, check the conditions relevant to
 
 Do not require every condition for every task. Compile the gate from the issue and repository structure; for example, a configuration-only change may have different evidence requirements from a business-logic bug.
 
+## Include external truth when code is not the source of truth
+
+Repository evidence is sometimes insufficient. Before an agent simplifies or removes behavior that depends on deployed state, fetch the authoritative runtime/control-plane value first.
+
+Examples:
+
+- feature-flag cleanup -> current rollout percentage and target value;
+- schema migration -> deployed schema/version;
+- dependency removal -> runtime/config usage, not only imports;
+- infrastructure cleanup -> actual resource/traffic state.
+
+If that external state is ambiguous, insert a human checkpoint **before code mutation**, not after the patch has already committed to an interpretation.
+
+A practical gate can look like:
+
+```yaml
+pre_edit:
+  repo_references_discovered: true
+  authoritative_runtime_state_fetched: true
+  target_state_unambiguous: true
+  target_state_confirmed: true   # human when ambiguity requires judgment
+```
+
+DoorDash's 2026 stale-feature-flag cleanup system uses exactly this shape: an analysis phase reads live rollout metadata before editing, produces a structured report, and asks an engineer to confirm the target value for ambiguous/partial rollouts.
+
+## Isolate parallel edits and gate PR creation deterministically
+
+When multiple coding agents work concurrently, give each task an isolated git worktree (or equivalent disposable workspace). Do not let parallel agents share a mutable checkout.
+
+Then make PR creation conditional on machine-checkable gates, for example:
+
+```yaml
+submission_gate:
+  build: passed
+  tests: passed
+  patch_coverage: ">= 95%"
+  static_analysis: passed
+  residual_references: 0
+```
+
+The exact thresholds are project-specific. The reusable rule is that the agent **cannot open/submit a PR just because it says it is done**; the harness verifies the required outputs first.
+
+For Gradle builds running concurrently in multiple worktrees, consider `--no-daemon` when shared daemon state creates cross-worktree interference. DoorDash reports using isolated worktrees plus `--no-daemon`, hard per-agent timeouts, patch-coverage checks, tests, and Detekt before allowing its cleanup agents to open PRs.
+
 ## Why it is useful
 
 FixedBench tested coding agents on 200 human-verified tasks where no source-code change was required. The evaluated agents still proposed undesirable source changes in 35–65% of cases. Explicitly asking agents to reproduce before patching reduced the problem, but also created over-abstention on partially fixed issues.
 
 A newer evidence-conditioned execution experiment (ECLoop) goes further by enforcing structured, task-specific evidence before edit/submission actions. Across 500 SWE-bench Verified instances and multiple model/scaffold combinations, the paper reports Pass@1 improvements of 4.8–11.8 percentage points while also reducing average token use in the tested configurations.
 
+DoorDash provides production evidence for extending the same principle beyond bug reproduction: its stale-feature-flag agent first grounds the intended edit in live rollout state, then performs each confirmed cleanup in an isolated worktree and blocks PR creation on build/tests/patch coverage/static analysis. In its reported sample of 50 recent flags, 45 produced usable PRs; the observed failure boundary was incomplete cleanup rather than silent target-value guessing. Treat those rates as workload-specific, not a general coding-agent benchmark.
+
 ## Caveats
 
 - `Reproduce before patch` alone is too crude. A partially fixed issue can legitimately need a patch even if the original reproduction no longer fails exactly as described.
 - A passing reproduction test does not prove the implementation is generally correct; still run relevant surrounding tests and inspect the behavioral contract.
 - Evidence gates should be checkable from tool/runtime events when possible. Do not accept the model merely saying that it inspected something.
+- External state must come from an authoritative source and be captured close enough to the edit that it has not gone stale.
+- Worktree isolation prevents edit collisions; it does not protect shared external systems or shared build caches by itself.
 - Excessive mandatory evidence can make trivial changes expensive. Gate only commitment-relevant evidence.
 
 ## Sources
 
 - https://arxiv.org/abs/2605.07769 — *Coding Agents Don't Know When to Act* (2026-05-08)
 - https://arxiv.org/abs/2607.28815 — *Preventing Premature Commitment in Coding Agents with an Evidence-Conditioned Execution Layer* (2026-07-30)
+- https://careersatdoordash.com/blog/automating-feature-flag-cleanup-at-scale-with-a-multi-agent-llm-system/ — live-state grounding, human target confirmation, isolated worktrees and deterministic PR gates (2026-08-24)
