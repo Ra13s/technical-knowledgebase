@@ -18,6 +18,7 @@ If the answer is vague, the item belongs in the processed-source log, not canoni
 
 - [`Hibernate @Immutable`](topics/java/hibernate-immutable.md) — make an entity/attribute/collection intentionally read-only to Hibernate; for immutable-by-convention JSON/custom values, avoid unnecessary deep-copy/cache serialization with a compatible `@Mutability` plan.
 - [`Hibernate @EmbeddedTable`](topics/java/hibernate-embedded-table.md) — map a complete embeddable to a secondary table without repetitive per-member table overrides in Hibernate ORM 7.2+.
+- [`Hibernate ORM 7.4 core @Audited`](topics/java/hibernate-core-audited.md) — keep entity audit history in Hibernate core, query historical state through normal sessions/HQL, and optionally migrate a compatible Envers schema.
 
 ### Spring / Java
 
@@ -28,12 +29,13 @@ If the answer is vague, the item belongs in the processed-source log, not canoni
 
 ### Spring / AI
 
+- [`Spring AI HyDE query transformation`](topics/spring/spring-ai-hyde-retrieval.md) — turn conversational questions into answer-like retrieval queries when user vocabulary does not match indexed documentation; keep the hypothetical text out of answer evidence.
 - [`Spring AI structured output validation and self-correction`](topics/spring/spring-ai-structured-output-validation.md) — combine provider-native schema enforcement with bounded response validation/retry for typed LLM outputs.
 - [`Spring AI ToolSearchToolCallingAdvisor`](topics/spring/spring-ai-tool-search-advisor.md) — progressively disclose tools instead of injecting a large tool catalog into every model request.
 
 ### Coding agents / AI protocols
 
-- [`Evidence-gated coding-agent edits`](topics/ai/evidence-gated-coding-agent-edits.md) — require observable evidence before bug-fix agents edit code or submit a patch, and make “no code change required” a valid successful outcome.
+- [`Evidence-gated coding-agent edits`](topics/ai/evidence-gated-coding-agent-edits.md) — require observable evidence before edits, include authoritative external state when code is not the source of truth, isolate parallel edits, and gate PR submission on deterministic checks.
 - [`Bind agent approvals to the exact side effect`](topics/ai/enforcement-bound-agent-approvals.md) — require mandatory human approval at the execution boundary, bind it to exact arguments/target/identity/expiry, and revalidate before executing.
 - [`Review AI-generated Maven build changes`](topics/ai/review-ai-generated-maven-build-changes.md) — inspect dependency tree, effective POM/settings and plugin dependencies whenever an agent changes Maven build configuration.
 - [`OpenAI Programmatic Tool Calling`](topics/ai/openai-programmatic-tool-calling.md) — use generated code for bounded deterministic tool-call reduction while keeping approval-, semantic- and citation-sensitive work direct.
