@@ -36,6 +36,9 @@ If the answer is vague, the item belongs in the processed-source log, not canoni
 ### Coding agents / AI protocols
 
 - [`Evidence-gated coding-agent edits`](topics/ai/evidence-gated-coding-agent-edits.md) — require observable evidence before edits, include authoritative external state when code is not the source of truth, isolate parallel edits, and gate PR submission on deterministic checks.
+- [`Narrow-contract background coding agent`](topics/ai/narrow-contract-background-coding-agent.md) — run background agents only from explicit triggers, reject underspecified tasks before editing, use a fresh-context reviewer, and preserve normal human/CI/security gates.
+- [`Deterministic outer loop for coding-agent platforms`](topics/ai/deterministic-outer-loop-agent-platform.md) — keep snapshots, validation, retries and publication under deterministic workflow control while the model handles reasoning and edits.
+- [`Precision-first multi-stage AI code review`](topics/ai/precision-first-multi-stage-code-review.md) — combine specialized reviewers, independent grading, semantic dedupe and production feedback to optimize review precision rather than comment volume.
 - [`Bind agent approvals to the exact side effect`](topics/ai/enforcement-bound-agent-approvals.md) — require mandatory human approval at the execution boundary, bind it to exact arguments/target/identity/expiry, and revalidate before executing.
 - [`Review AI-generated Maven build changes`](topics/ai/review-ai-generated-maven-build-changes.md) — inspect dependency tree, effective POM/settings and plugin dependencies whenever an agent changes Maven build configuration.
 - [`OpenAI Programmatic Tool Calling`](topics/ai/openai-programmatic-tool-calling.md) — use generated code for bounded deterministic tool-call reduction while keeping approval-, semantic- and citation-sensitive work direct.
@@ -52,6 +55,7 @@ If the answer is vague, the item belongs in the processed-source log, not canoni
 
 ## Intake
 
-- [`sources/processed.md`](sources/processed.md) — deduplication ledger and dispositions.
+- [`sources/processed.md`](sources/processed.md) — legacy deduplication ledger.
+- [`sources/processed/`](sources/processed/) — append-only dated processed-source logs for newer runs.
 - [`intakes/`](intakes/) — short records of what was added, rejected and worth experimenting with.
 - [`CONTRIBUTING.md`](CONTRIBUTING.md) — canonical admission and entry rules.
