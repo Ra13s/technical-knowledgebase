@@ -4,7 +4,7 @@
 
 A coding-agent platform pattern where the agent owns reasoning and edits inside an isolated session, while the surrounding workflow deterministically controls checkout state, validation, retries, publication and long-running orchestration.
 
-Dropbox's Nova platform uses this shape across interactive sessions, CI repair, flaky-test remediation, migrations and dependency upgrades.
+Dropbox's Nova platform uses this shape across interactive sessions, CI repair, flaky-test remediation, migrations and dependency upgrades. Open SWE independently reinforces the same boundary with deterministic middleware around an otherwise agentic coding loop.
 
 ## Use when
 
@@ -69,6 +69,30 @@ agent proposes -> system validates -> evidence returned -> agent revises
 
 Every autonomous loop needs a hard stop such as `max_iterations`, deadline, cost budget, or repeated-failure threshold.
 
+### Put mandatory lifecycle behavior in deterministic hooks
+
+If a behavior must always happen, implement it around the model loop rather than relying only on a prompt instruction.
+
+Open SWE exposes this idea through middleware hooks such as checking queued follow-up messages before a model turn, normalizing tool errors, and ensuring a PR exists after useful work. The exact framework is optional; the reusable boundary is:
+
+```text
+before_model
+  -> drain/reroute follow-up input
+
+model + tools
+  -> candidate state
+
+tool_error
+  -> structured failure evidence
+
+after_agent
+  -> deterministic validation/publication policy
+```
+
+Use a stable task/thread identifier so follow-ups are routed to the same task and persistent sandbox instead of accidentally starting a second independent implementation.
+
+A deterministic backstop must still respect validation gates: `after_agent -> open/update PR` should not mean `after_agent -> publish unvalidated change`.
+
 ### Integrate real engineering context
 
 Expose logs, observability, repository-local instructions, plugins/MCP and organization-specific build tools. Avoid an AI-only parallel toolchain that does not match how engineers validate work.
@@ -85,6 +109,7 @@ It also creates one reusable execution layer for interactive agents, background 
 - Isolation of file state does not imply isolation of credentials/network/runtime resources.
 - A common platform is only worth it when multiple workflows share execution, context and validation needs.
 - Retry loops can burn cost indefinitely unless bounded.
+- A deterministic lifecycle hook can still be dangerous if its policy is wrong; hooks make guarantees enforceable, not automatically correct.
 
 ## Prototype experiment
 
@@ -95,13 +120,17 @@ Wrap one existing coding-agent workflow in a small orchestrator with:
 3. declarative validation commands;
 4. structured validation result returned to the agent;
 5. max 3 repair iterations;
-6. publication only after validation passes.
+6. stable task/thread identity for follow-ups;
+7. deterministic before/after/error hooks;
+8. publication only after validation passes.
 
 Measure completion rate, repair iterations, human intervention and invalid/incorrectly validated PRs.
 
 ## Sources
 
 - https://dropbox.tech/machine-learning/introducing-nova-our-internal-platform-for-coding-agents
+- https://www.langchain.com/blog/open-swe-an-open-source-framework-for-internal-coding-agents
+- https://github.com/langchain-ai/open-swe
 
 ## Related
 

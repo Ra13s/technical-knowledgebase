@@ -55,7 +55,7 @@ A vendor source can establish what a vendor feature does; it is not automaticall
 
 ## Source intake
 
-Before processing a source, check `sources/processed.md` and open intake PRs. Do not process the same source twice.
+Before processing a source, check both the legacy `sources/processed.md`, dated ledgers under `sources/processed/`, and open intake PRs. Do not process the same source twice.
 
 For newsletters, use the newsletter as discovery and follow worthwhile linked articles or primary documentation. Extract reusable things, not the newsletter theme.
 
@@ -66,16 +66,24 @@ Use dispositions such as:
 - `skipped-not-actionable`
 - `skipped-duplicate`
 - `skipped-low-confidence`
+- `experiment-candidate`
 
 The source log is for deduplication; it is not the knowledgebase.
 
 ## Intake notes
 
-Each intake run gets a short note under `intakes/` containing only:
+Each intake run gets a human-readable note under `intakes/`. The note is a primary artifact, not an administrative ledger.
 
-- new things we can use now
-- existing entries improved
-- rejected non-actionable material
-- concrete experiments worth trying
+Begin with `## Synthesis`: compact editorial prose explaining the run's strongest idea, how findings connect to existing knowledge, what shared pattern emerges across independent sources, what we should now do differently, and where evidence remains weak or tradeoffs matter. A reader months later should understand why the run mattered without opening every source article.
 
-Zero canonical additions is a valid result. Never add filler to make a run look productive.
+After the synthesis, include as applicable:
+
+- `## New things we can use now`
+- `## Existing KB entries improved`
+- `## Valuable agent-system designs discovered`
+- `## Rejected / deferred`
+- `## Experiments worth trying`
+- `## Newly discovered sources worth revisiting`
+- `## Source log`
+
+Zero canonical additions is a valid result. Never add filler to make a run look productive, and do not manufacture a grand synthesis when the sources do not support one.

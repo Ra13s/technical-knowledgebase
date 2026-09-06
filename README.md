@@ -37,7 +37,10 @@ If the answer is vague, the item belongs in the processed-source log, not canoni
 
 - [`Evidence-gated coding-agent edits`](topics/ai/evidence-gated-coding-agent-edits.md) — require observable evidence before edits, include authoritative external state when code is not the source of truth, isolate parallel edits, and gate PR submission on deterministic checks.
 - [`Narrow-contract background coding agent`](topics/ai/narrow-contract-background-coding-agent.md) — run background agents only from explicit triggers, reject underspecified tasks before editing, use a fresh-context reviewer, and preserve normal human/CI/security gates.
-- [`Deterministic outer loop for coding-agent platforms`](topics/ai/deterministic-outer-loop-agent-platform.md) — keep snapshots, validation, retries and publication under deterministic workflow control while the model handles reasoning and edits.
+- [`Deterministic outer loop for coding-agent platforms`](topics/ai/deterministic-outer-loop-agent-platform.md) — keep snapshots, validation, retries, lifecycle hooks and publication under deterministic workflow control while the model handles reasoning and edits.
+- [`Ablate coding-agent harness scaffolding when models change`](topics/ai/ablate-agent-harness-scaffolding.md) — re-test planners, context resets, evaluators and other non-safety scaffolding one component at a time after model upgrades instead of preserving obsolete workarounds as cargo cult.
+- [`Search-based code optimization agents with hard fitness gates`](topics/ai/search-based-code-optimization-agents.md) — use LLMs to generate candidates inside a bounded search loop while deterministic correctness checks, benchmarks, diagnostics and budgets decide what survives.
+- [`Layered scoped agent memory with stateless reasoning sessions`](topics/ai/layered-scoped-agent-memory.md) — keep durable memory external, scoped and versionable; consolidate recent observations, retrieve only relevant memory, and reconstruct each reasoning session from live source-of-truth state.
 - [`Precision-first multi-stage AI code review`](topics/ai/precision-first-multi-stage-code-review.md) — combine specialized reviewers, independent grading, semantic dedupe and production feedback to optimize review precision rather than comment volume.
 - [`Bind agent approvals to the exact side effect`](topics/ai/enforcement-bound-agent-approvals.md) — require mandatory human approval at the execution boundary, bind it to exact arguments/target/identity/expiry, and revalidate before executing.
 - [`Review AI-generated Maven build changes`](topics/ai/review-ai-generated-maven-build-changes.md) — inspect dependency tree, effective POM/settings and plugin dependencies whenever an agent changes Maven build configuration.
@@ -57,5 +60,5 @@ If the answer is vague, the item belongs in the processed-source log, not canoni
 
 - [`sources/processed.md`](sources/processed.md) — legacy deduplication ledger.
 - [`sources/processed/`](sources/processed/) — append-only dated processed-source logs for newer runs.
-- [`intakes/`](intakes/) — short records of what was added, rejected and worth experimenting with.
+- [`intakes/`](intakes/) — editorial run syntheses: what changed in our engineering model, what was added/rejected, and experiments worth trying.
 - [`CONTRIBUTING.md`](CONTRIBUTING.md) — canonical admission and entry rules.
