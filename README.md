@@ -8,6 +8,15 @@ The admission test is simple:
 
 If the answer is vague, the item belongs in the processed-source log, not canonical knowledge.
 
+## Clone this system
+
+The intake workflow itself is reusable:
+
+- [`prompts/knowledgebase-intake.md`](prompts/knowledgebase-intake.md) — the full governing prompt used to discover, admit, synthesize, publish and merge new knowledge.
+- [`docs/chatgpt-setup.md`](docs/chatgpt-setup.md) — how to fork/clone the repository, connect GitHub to ChatGPT, test a manual run, and run the intake repeatedly with ChatGPT Scheduled Tasks.
+
+The prompt lives in Git deliberately. A scheduled ChatGPT task can stay small and load the current prompt from the repository at the start of every run, so improvements to the system are versioned and automatically picked up later.
+
 ## Canonical knowledge
 
 ### Java
