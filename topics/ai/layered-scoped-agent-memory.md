@@ -4,7 +4,7 @@
 
 An agent-memory pattern that keeps durable knowledge outside the model context, separates recent observations from curated long-term summaries, retrieves only relevant memory on demand, and starts each reasoning turn from fresh live task state.
 
-Coinbase's CEEcil support teammate uses this shape: opt-in scoped observations, nightly consolidation into durable summaries, Git-versioned knowledge, on-demand memory tools, and stateless reasoning sessions that reread the live Slack thread before acting.
+Coinbase's CEEcil support teammate uses this shape: opt-in scoped observations, nightly consolidation into durable summaries, Git-versioned knowledge, on-demand memory tools, and stateless reasoning sessions that reread the live Slack thread before acting. Integral's 007 harness independently reports a similar design: runs are stateless and durable handoff lives in artifacts such as issues, pull requests and API records rather than an internal orchestration transcript.
 
 ## Use when
 
@@ -101,11 +101,28 @@ new invocation
 
 This makes retries, model swaps and failover easier because continuity is not trapped inside one model session.
 
-### 5. Keep operational behavior outside memory/reasoning
+### 5. Prefer domain artifacts as handoff state
+
+If the workflow already has a durable artifact, use it before inventing a second agent-state database.
+
+Examples:
+
+```text
+bug investigator -> writes issue with evidence/root cause
+fix agent        -> reads issue, opens PR
+review agent     -> writes PR review/change request
+fix agent retry  -> reads current PR + review state
+```
+
+The issue or PR becomes the handoff protocol. This keeps human and agent state aligned, makes retries naturally idempotent, and leaves the history in the system engineers already audit.
+
+Do not force every hidden model thought into the artifact. Persist only information needed for the next actor: evidence, decisions, status, constraints and requested actions.
+
+### 6. Keep operational behavior outside memory/reasoning
 
 Background schedules, publishing, deduplication, retries, audit, spend limits and kill switches belong in a deterministic service layer. The model can decide what a response should say; it should not be the only system responsible for remembering whether a scheduled job already ran or whether a message was published.
 
-### 6. Prefer human-readable, versionable durable knowledge
+### 7. Prefer human-readable, versionable durable knowledge
 
 For a bounded corpus, Git-versioned Markdown or a structured text bundle is often enough. Keep provenance and freshness visible.
 
@@ -127,7 +144,7 @@ Google's Open Knowledge Format is one example of a Git-friendly packaging format
 
 Do not introduce a vector database merely because the system has memory. Start with the simplest retrieval that meets corpus size and recall needs, then add semantic retrieval when measured misses justify it.
 
-### 7. Surface freshness and provenance
+### 8. Surface freshness and provenance
 
 Memory is evidence with an expiration problem. Retrieval results should expose where a fact came from and when it was last refreshed so the agent can prefer current live state over stale summaries.
 
@@ -140,7 +157,7 @@ Memory is evidence with an expiration problem. Retrieval results should expose w
 }
 ```
 
-### 8. Tier cognition when the workflow permits it
+### 9. Tier cognition when the workflow permits it
 
 Not every request needs a full agent loop. A cheap classifier/router can send deterministic lookups to direct API or knowledge paths and reserve expensive agent reasoning for open-ended multi-step work.
 
@@ -159,6 +176,8 @@ The pattern distinguishes **memory** from **context**. Large context windows do 
 
 Externalized memory also makes model upgrades safer: the model can be replaced while knowledge, provenance, workflow state and retention policy remain stable.
 
+Using existing workflow artifacts as handoff state removes a second consistency problem: humans, agents and automation all observe the same issue/PR/ticket rather than separate hidden agent state.
+
 ## Failure modes / caveats
 
 - **Consolidation loss:** summaries can erase qualifiers or disagreement. Keep links/provenance back to source material.
@@ -166,6 +185,7 @@ Externalized memory also makes model upgrades safer: the model can be replaced w
 - **Privacy creep:** broad collection creates a surveillance system very quickly; scope inputs before ingestion.
 - **Memory poisoning:** untrusted content should not silently become curated durable knowledge.
 - **Over-consolidation:** not every observation deserves promotion into long-term memory.
+- **Artifact overload:** issues/PRs become unusable if agents dump raw traces instead of concise handoff state.
 - **Retrieval ceiling:** simple substring/search approaches eventually fail as corpus size and vocabulary diversity grow; measure misses before changing architecture.
 
 ## Prototype experiment
@@ -178,7 +198,8 @@ Build a small opt-in memory pilot for one engineering workflow:
 4. store durable team knowledge in Git Markdown or OKF-like bundles;
 5. expose `search_memory()` and `get_recent_summary()` tools;
 6. start every agent invocation from the current live thread/task;
-7. keep publishing, dedupe and scheduled consolidation in deterministic workers.
+7. use the issue/PR itself for inter-agent handoff where possible;
+8. keep publishing, dedupe and scheduled consolidation in deterministic workers.
 
 Measure repeated re-briefing time, stale-memory errors, retrieval misses, human corrections, latency and token cost.
 
@@ -187,6 +208,7 @@ Measure repeated re-briefing time, stale-memory errors, retrieval misses, human 
 - https://www.coinbase.com/blog/ceecil-engineering-a-support-teammate-with-human-memory
 - https://cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing/
 - https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md
+- https://engineering.integral.de/posts/007-agent-harness/
 
 ## Related
 
