@@ -58,7 +58,7 @@ com.integrallis:vectors-vcr-spring-ai:0.1.21     # Spring AI
 com.integrallis:vectors-vcr-langchain4j:0.1.21   # LangChain4j
 ```
 
-A test can opt into record/replay behavior:
+A Spring AI test can opt into record/replay behavior by annotating the concrete model delegate:
 
 ```java
 @VCRTest(
@@ -68,11 +68,11 @@ A test can opt into record/replay behavior:
 class ProductAssistantTest {
 
     @VCRModel
-    ChatModel chatModel;
+    ChatModel chatModel = new OpenAiChatModel(apiKey);
 
     @Test
     void extractsProductDecision() {
-        // production-style model call through the wrapped model
+        // production-style model call through the automatically wrapped model
     }
 }
 ```
