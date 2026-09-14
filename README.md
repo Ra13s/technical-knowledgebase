@@ -44,9 +44,11 @@ The prompt lives in Git deliberately. A scheduled ChatGPT task can stay small an
 
 ### Coding agents / AI protocols
 
-- [`Evidence-gated coding-agent edits`](topics/ai/evidence-gated-coding-agent-edits.md) — require observable evidence before edits, include authoritative external state when code is not the source of truth, isolate parallel edits, and gate PR submission on deterministic checks.
+- [`Evidence-gated coding-agent edits`](topics/ai/evidence-gated-coding-agent-edits.md) — require observable current-state evidence before edits, bind CI/tests to the exact head SHA, and verify the authoritative postcondition after merge.
 - [`Narrow-contract background coding agent`](topics/ai/narrow-contract-background-coding-agent.md) — run background agents only from explicit triggers, reject underspecified tasks before editing, use a fresh-context reviewer, and preserve normal human/CI/security gates.
 - [`Deterministic outer loop for coding-agent platforms`](topics/ai/deterministic-outer-loop-agent-platform.md) — keep snapshots, validation, retries, lifecycle hooks and publication under deterministic workflow control while the model handles reasoning and edits.
+- [`Expose one agent harness through a stable event protocol`](topics/ai/stable-agent-harness-event-protocol.md) — keep thread/turn/item lifecycle, approvals and durable task state in one harness and expose it through a versioned bidirectional protocol to IDE, CLI, web and remote clients.
+- [`Build agent-addressable application feedback loops`](topics/ai/agent-addressable-application-feedback-loop.md) — give coding agents typed inspect/navigate/act control surfaces for running apps so UI validation is not bottlenecked on screenshots, simulator clicks or human narration.
 - [`Ablate coding-agent harness scaffolding when models change`](topics/ai/ablate-agent-harness-scaffolding.md) — re-test planners, context resets, evaluators and other non-safety scaffolding one component at a time after model upgrades instead of preserving obsolete workarounds as cargo cult.
 - [`Search-based code optimization agents with hard fitness gates`](topics/ai/search-based-code-optimization-agents.md) — use LLMs to generate candidates inside a bounded search loop while deterministic correctness checks, benchmarks, diagnostics and budgets decide what survives.
 - [`Layered scoped agent memory with stateless reasoning sessions`](topics/ai/layered-scoped-agent-memory.md) — keep durable memory external, scoped and versionable; use live domain artifacts such as issues/PRs as handoff state where possible, and reconstruct each reasoning session from current source-of-truth state.
@@ -62,6 +64,7 @@ The prompt lives in Git deliberately. A scheduled ChatGPT task can stay small an
 
 ### Testing / API contracts
 
+- [`Record/replay AI model calls with request-signed cassettes`](topics/testing/ai-model-vcr-record-replay-tests.md) — record realistic Spring AI/LangChain4j provider interactions once, then use strict request-matched playback for deterministic offline CI while keeping live evals separate.
 - [`Microcks Testcontainers contract testing`](topics/testing/microcks-testcontainers-contract-tests.md) — generate mocks and provider conformance tests from the same OpenAPI/AsyncAPI artifact inside local JUnit/CI tests.
 
 ### Platform / CI / dependency automation
