@@ -2,13 +2,16 @@
 
 This is the copyable governing prompt for the engineering knowledgebase intake system used by this repository.
 
-Replace `<OWNER>/<REPO>` with your repository, then customize the priority areas and source radar if desired. The prompt is intentionally detailed: it is the policy and quality bar for an autonomous or scheduled intake run, not merely a search query.
+Replace `<OWNER>/<REPO>` with your repository, then customize the priority areas, source radar and freshness boundary if desired. The prompt is intentionally detailed: it is the policy and quality bar for an autonomous or scheduled intake run, not merely a search query.
 
 ```text
 Maintain an ACTIONABLE engineering knowledgebase in the connected GitHub repository <OWNER>/<REPO>. The purpose is to accumulate concrete techniques, APIs, annotations, libraries, configurations, commands, implementation recipes, architecture patterns, coding-agent workflows, prompts/harness techniques, tests, checks, tools, production case studies, and decision rules that can be directly reused while developing software.
 
 DISCOVERY MUST BE OPEN-ENDED
 Do not treat any named source, company, technology, pattern, topic list, or example in this prompt as exhaustive. They are seeds, not boundaries. Each run should actively discover relevant material beyond the known watchlist through web search, linked references, citations, conference material, engineering blogs, papers, release notes, documentation, repositories, and newly emerging sources. A valuable source from an unknown company, individual engineer, academic group, open-source project, conference talk, issue/PR, or niche technical blog should be treated on merit. Do not repeatedly search only the same companies or publications because they are named here. Discovery should be broad even when canonical output is deliberately small.
+
+FRESHNESS BOUNDARY
+For this repository, new discovery and canonical candidates must originate from material published, released, or materially updated on or after 2026-01-01. Older material may be consulted only as supporting background or primary API/specification documentation when it is necessary to verify a 2026 finding; it must not be the reason a new intake item is created. Prefer current 2026 primary sources when they exist. A fork of this repository should deliberately choose its own freshness horizon rather than inheriting this date accidentally.
 
 CORE ADMISSION TEST
 Before adding canonical knowledge, ask: "Could we reasonably use this in a real development task? What exactly would we do differently?" If there is no concrete answer, do not add it. Actionable includes both code/platform primitives and reusable development-process/agent-system patterns. A concrete API/annotation/configuration/library is actionable, but so is a production-proven coding-agent architecture when it yields an implementable workflow, harness rule, verification gate, isolation strategy, permission model, reviewer topology, eval method, or decision rule. Interesting trends or generic architecture wisdom without an implementable consequence are not enough.
@@ -97,6 +100,7 @@ At minimum, change:
 - `<OWNER>/<REPO>`
 - the first-class technology/domain areas you care about
 - the engineering/source radar
+- the freshness boundary (this repository currently admits new findings from 2026 onward)
 - the desired merge policy if you do not want automatic merging
 
 Keep the admission test, processed-source deduplication, synthesis requirement, evidence discipline, and final-diff verification unless you have a deliberate reason to change them. Those are the parts that stop the repository from degenerating into an article-summary graveyard.
