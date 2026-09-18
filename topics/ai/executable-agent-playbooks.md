@@ -170,11 +170,14 @@ For a smaller Spring-based agent, `spring-ai-agent-utils` currently provides `Sk
 </dependency>
 ```
 
-Register reusable skills:
+Register reusable skill resources with the current builder API:
 
 ```java
+List<Resource> skillPaths = List.of(
+    new FileSystemResource(".claude/skills/my-skill"));
+
 var skills = SkillsTool.builder()
-    .addSkillsDirectory(".claude/skills")
+    .addSkillsResources(skillPaths)
     .build();
 
 ChatClient client = chatClientBuilder
@@ -182,9 +185,9 @@ ChatClient client = chatClientBuilder
     .build();
 ```
 
-A skill directory contains `SKILL.md` with YAML metadata plus instructions and may include scripts, references and assets. Use this as an implementation primitive for portable knowledge modules, not as a substitute for a real permission/sandbox layer.
+A skill resource points at a skill folder containing `SKILL.md` with YAML metadata plus instructions and may include scripts, references and assets. Use this as an implementation primitive for portable knowledge modules, not as a substitute for a real permission/sandbox layer.
 
-At the 2026-09 intake, the community repository documents Java 17+, Spring Boot 3/4 and Spring AI 2.0+; verify the current version before pinning.
+At the 2026-09 intake, the community repository documents version 0.12.0, Java 17+, Spring Boot 3/4 and Spring AI 2.0+; verify the current release before pinning.
 
 ## Why it is useful
 
