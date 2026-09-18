@@ -22,6 +22,7 @@ The prompt lives in Git deliberately. A scheduled ChatGPT task can stay small an
 ### Java
 
 - [`Switching over evolving sealed APIs`](topics/java/evolving-sealed-api-switches.md) — keep compiler exhaustiveness for hierarchies we own, but control the runtime failure path for independently evolving sealed dependencies.
+- [`Java 26 HTTP/3 with java.net.http.HttpClient`](topics/java/java-26-http3-httpclient.md) — opt into HTTP/3 with the standard client, choose fallback/discovery behavior explicitly and verify the negotiated response version on the real network path.
 
 ### Persistence
 
@@ -49,8 +50,9 @@ The prompt lives in Git deliberately. A scheduled ChatGPT task can stay small an
 - [`Deterministic outer loop for coding-agent platforms`](topics/ai/deterministic-outer-loop-agent-platform.md) — keep snapshots, validation, retries, lifecycle hooks and publication under deterministic workflow control while the model handles reasoning and edits.
 - [`Expose one agent harness through a stable event protocol`](topics/ai/stable-agent-harness-event-protocol.md) — keep thread/turn/item lifecycle, approvals and durable task state in one harness and expose it through a versioned bidirectional protocol to IDE, CLI, web and remote clients.
 - [`Build agent-addressable application feedback loops`](topics/ai/agent-addressable-application-feedback-loop.md) — give coding agents typed inspect/navigate/act control surfaces for running apps so UI validation is not bottlenecked on screenshots, simulator clicks or human narration.
+- [`Encode organizational workflows as executable agent playbooks`](topics/ai/executable-agent-playbooks.md) — package repeatable engineering work as discoverable, versioned workflows with explicit tools, permissions, deterministic gates and outputs rather than burying institutional knowledge in static prompts/docs.
 - [`Ablate coding-agent harness scaffolding when models change`](topics/ai/ablate-agent-harness-scaffolding.md) — re-test planners, context resets, evaluators and other non-safety scaffolding one component at a time after model upgrades instead of preserving obsolete workarounds as cargo cult.
-- [`Search-based code optimization agents with hard fitness gates`](topics/ai/search-based-code-optimization-agents.md) — use LLMs to generate candidates inside a bounded search loop while deterministic correctness checks, benchmarks, diagnostics and budgets decide what survives.
+- [`Search-based code optimization agents with hard fitness gates`](topics/ai/search-based-code-optimization-agents.md) — use LLMs to generate candidates inside a bounded search loop; validate correctness first and, for production code, ground/freeze the fitness benchmark against real workload signals before optimizing.
 - [`Layered scoped agent memory with stateless reasoning sessions`](topics/ai/layered-scoped-agent-memory.md) — keep durable memory external, scoped and versionable; use live domain artifacts such as issues/PRs as handoff state where possible, and reconstruct each reasoning session from current source-of-truth state.
 - [`Engineer agent fleets with outcome-denominated unit economics`](topics/ai/agent-fleet-unit-economics.md) — benchmark models on real work and optimize cost per accepted outcome, routing bounded work cheaply while measuring context/tool-call waste and quality.
 - [`Gate coding-agent harness configuration as a supply chain`](topics/ai/agent-harness-supply-chain-gates.md) — lint persistent agent configuration at install and assembly boundaries; pin runtime tool dependencies and gate only validated, deterministic defect classes.
@@ -70,6 +72,7 @@ The prompt lives in Git deliberately. A scheduled ChatGPT task can stay small an
 ### Platform / CI / dependency automation
 
 - [`Rootless Kubernetes nodes for agent and test sandboxes`](topics/platform/rootless-kubernetes-agent-sandbox.md) — run Kubernetes 1.37+ node components in a Linux user namespace for lower-privilege agent/integration-test clusters; validate CNI/CSI compatibility explicitly.
+- [`Migrate Kubernetes extended resources to DRA without changing workloads`](topics/platform/kubernetes-dra-extended-resource-migration.md) — map existing resource names to DRA `DeviceClass` objects in Kubernetes 1.37+ so device allocation can migrate node-by-node without forcing workload manifests to adopt `ResourceClaim` immediately.
 - [`One aggregate required check for conditional GitHub Actions CI`](topics/platform/github-actions-aggregate-required-check.md) — keep path-specific CI conditional while exposing one always-present status check to branch protection and merge queues.
 - [`Renovate + Gradle dependency verification metadata`](topics/platform/renovate-gradle-verification-metadata.md) — regenerate Gradle verification metadata in the same Renovate dependency-update PR with tightly allowlisted post-upgrade commands.
 
