@@ -45,7 +45,8 @@ The expected result is:
 4. It creates the dated source ledger and editorial intake synthesis.
 5. It creates a fresh branch and ready-for-review PR.
 6. It checks the final diff, CI/status checks, and mergeability.
-7. If safe and permitted, it merges; otherwise it leaves the PR open with the blocker documented.
+7. If safe and permitted, it merges and verifies the accepted changes are present on `main`; otherwise it leaves the PR open with the blocker documented.
+8. After a successful merge and verification, it deletes the merged source branch. A completed intake should not leave stale per-run branches behind.
 
 Do the first run manually because it exposes repository-permission or approval problems before you put the workflow on a schedule.
 
@@ -67,6 +68,12 @@ Execute the complete intake workflow described there, including discovery, sourc
 
 Keeping the scheduled-task instruction short is intentional. The durable policy stays in Git, where it can be reviewed and improved. The task only points to the current version.
 
+### Branch cleanup
+
+Treat intake branches as temporary staging artifacts. After a PR is merged and the resulting commit is verified on `main`, delete the source branch. If your GitHub repository supports it, enable GitHub's **Automatically delete head branches** setting so normal merged PRs clean themselves up. The intake prompt still requires explicit verification because automatic deletion should happen only after the accepted work has reached `main`.
+
+If the connected GitHub integration cannot delete refs and repository-level automatic deletion is not enabled, report branch cleanup as incomplete rather than calling the whole maintenance cycle fully clean.
+
 ### Why keep the prompt in Git?
 
 A scheduled task created inside a ChatGPT Project cannot rely on Project-uploaded files being available when the task runs. A prompt stored in the connected GitHub repository avoids that problem and also gives you normal version history, review, blame, and rollback.
@@ -80,7 +87,8 @@ For the first runs, inspect:
 - whether rejected sources are still logged for deduplication;
 - whether the synthesis explains the engineering insight instead of only listing file changes;
 - whether GitHub writes are limited to intended KB files;
-- whether automatic merge happens only after required checks and approvals are satisfied.
+- whether automatic merge happens only after required checks and approvals are satisfied;
+- whether the merged source branch is deleted after `main` verification.
 
 If the output drifts, change [`prompts/knowledgebase-intake.md`](../prompts/knowledgebase-intake.md), not the scheduled task. The next run will pick up the new policy.
 
