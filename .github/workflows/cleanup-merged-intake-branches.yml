@@ -1,0 +1,55 @@
+name: Cleanup merged intake branches
+
+on:
+  pull_request:
+    types: [closed]
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/cleanup-merged-intake-branches.yml
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    if: >-
+      github.event_name == 'push' ||
+      (github.event.pull_request.merged == true &&
+       startsWith(github.event.pull_request.head.ref, 'agent/kb-intake-'))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete merged intake branches
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          EVENT_NAME: ${{ github.event_name }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          delete_ref() {
+            local ref="$1"
+            echo "Deleting merged/stale branch: $ref"
+            gh api -X DELETE "repos/$REPO/git/refs/heads/$ref" >/dev/null 2>&1 || true
+          }
+
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            delete_ref "$HEAD_REF"
+            exit 0
+          fi
+
+          # One-time/backfill cleanup for historical merged intake PRs.
+          gh api --paginate "repos/$REPO/pulls?state=closed&per_page=100" \
+            --jq '.[] | select(.merged_at != null) | .head.ref' |
+          while IFS= read -r ref; do
+            case "$ref" in
+              agent/kb-intake-*|docs/cloneable-chatgpt-intake-system)
+                delete_ref "$ref"
+                ;;
+            esac
+          done
+
+          # This pre-intake branch has no unique commits and is fully behind main.
+          delete_ref "agent/improve-source-registry"
