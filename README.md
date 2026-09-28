@@ -42,6 +42,7 @@ The prompt lives in Git deliberately. A scheduled ChatGPT task can stay small an
 - [`Spring AI HyDE query transformation`](topics/spring/spring-ai-hyde-retrieval.md) — turn conversational questions into answer-like retrieval queries when user vocabulary does not match indexed documentation; keep the hypothetical text out of answer evidence.
 - [`Spring AI structured output validation and self-correction`](topics/spring/spring-ai-structured-output-validation.md) — combine provider-native schema enforcement with bounded response validation/retry for typed LLM outputs.
 - [`Spring AI ToolSearchToolCallingAdvisor`](topics/spring/spring-ai-tool-search-advisor.md) — progressively disclose tools instead of injecting a large tool catalog into every model request.
+- [`Spring AI TypeSafe Jev decision gates`](topics/spring/spring-ai-typesafe-jev-decision-gates.md) — use typed judgements for routing, evaluation and bounded refinement when the desired output is a decision rather than generated prose.
 
 ### Coding agents / AI protocols
 
@@ -62,6 +63,8 @@ The prompt lives in Git deliberately. A scheduled ChatGPT task can stay small an
 - [`Precision-first multi-stage AI code review`](topics/ai/precision-first-multi-stage-code-review.md) — localize risk first, gather bounded primary evidence, use review-specific context, explicitly try to disprove candidate findings, then dedupe and publish only high-signal comments.
 - [`Gate agentic security findings with localized threat models and proof`](topics/ai/agentic-security-presubmit-pipeline.md) — scan changes with live threat context, then require structural reachability or sandbox reproduction before surfacing findings or asking an agent to patch them.
 - [`Bind agent approvals to the exact side effect`](topics/ai/enforcement-bound-agent-approvals.md) — require mandatory human approval at the execution boundary, bind it to exact arguments/target/identity/expiry, and revalidate before executing.
+- [`Make agent side effects idempotent in the tool contract`](topics/ai/idempotent-agent-tool-side-effects.md) — attach stable logical operation keys to persistent writes, expose authoritative status, and avoid unsafe blind retries.
+- [`Externalize authoritative agent telemetry`](topics/ai/external-authoritative-agent-telemetry.md) — keep model/tool/executor evidence in control-plane telemetry outside the mutable task workspace.
 - [`Review AI-generated Maven build changes`](topics/ai/review-ai-generated-maven-build-changes.md) — inspect dependency tree, effective POM/settings and plugin dependencies whenever an agent changes Maven build configuration.
 - [`OpenAI Programmatic Tool Calling`](topics/ai/openai-programmatic-tool-calling.md) — use generated code for bounded deterministic tool-call reduction while keeping approval-, semantic- and citation-sensitive work direct.
 - [`MCP protocol upgrades and conformance`](topics/ai/mcp-protocol-upgrades-and-conformance.md) — isolate protocol-version adapters at the boundary, test old/new contracts and run the official MCP conformance suite in CI.
