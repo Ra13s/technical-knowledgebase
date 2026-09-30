@@ -23,6 +23,7 @@ The prompt lives in Git deliberately. A scheduled ChatGPT task can stay small an
 
 - [`Switching over evolving sealed APIs`](topics/java/evolving-sealed-api-switches.md) — keep compiler exhaustiveness for hierarchies we own, but control the runtime failure path for independently evolving sealed dependencies.
 - [`Java 26 HTTP/3 with java.net.http.HttpClient`](topics/java/java-26-http3-httpclient.md) — opt into HTTP/3 with the standard client, choose fallback/discovery behavior explicitly and verify the negotiated response version on the real network path.
+- [`Java 27 JFR in-process redaction`](topics/java/java-27-jfr-in-process-redaction.md) — keep selected sensitive startup data out of supported JFR events at capture time, preserve the runtime defaults and canary-test the exact coverage.
 
 ### Persistence
 
@@ -56,6 +57,7 @@ The prompt lives in Git deliberately. A scheduled ChatGPT task can stay small an
 - [`Search-based code optimization agents with hard fitness gates`](topics/ai/search-based-code-optimization-agents.md) — use LLMs to generate candidates inside a bounded search loop; validate correctness first and, for production code, ground/freeze the fitness benchmark against real workload signals before optimizing.
 - [`Layered scoped agent memory with stateless reasoning sessions`](topics/ai/layered-scoped-agent-memory.md) — keep durable memory external, scoped and versionable; use live domain artifacts such as issues/PRs as handoff state where possible, and reconstruct each reasoning session from current source-of-truth state.
 - [`Engineer agent fleets with outcome-denominated unit economics`](topics/ai/agent-fleet-unit-economics.md) — benchmark models on real work and optimize cost per accepted outcome, routing bounded work cheaply while measuring context/tool-call waste and quality.
+- [`Profile agent fleets by semantic operation`](topics/ai/semantic-agent-trajectory-profiling.md) — aggregate many trajectories into semantic token/time/effect profiles so harness optimization targets repeated fleet hotspots rather than anecdotal single runs.
 - [`Protect shared agent platforms with workload classes and bounded recovery`](topics/ai/agent-platform-capacity-isolation.md) — inventory full agent trajectories, propagate workload identity, reserve capacity by service class and bound recovery per run and across shared dependencies.
 - [`Gate coding-agent harness configuration as a supply chain`](topics/ai/agent-harness-supply-chain-gates.md) — lint persistent agent configuration at install and assembly boundaries; pin runtime tool dependencies and gate only validated, deterministic defect classes.
 - [`Resolve repository instructions by target path`](topics/ai/path-scoped-repository-instructions.md) — compose only ancestor instructions relevant to the active path, refresh them as tools move through a monorepo, and bound/observe instruction context explicitly.
@@ -79,6 +81,7 @@ The prompt lives in Git deliberately. A scheduled ChatGPT task can stay small an
 - [`Rootless Kubernetes nodes for agent and test sandboxes`](topics/platform/rootless-kubernetes-agent-sandbox.md) — run Kubernetes 1.37+ node components in a Linux user namespace for lower-privilege agent/integration-test clusters; validate CNI/CSI compatibility explicitly.
 - [`Migrate Kubernetes extended resources to DRA without changing workloads`](topics/platform/kubernetes-dra-extended-resource-migration.md) — map existing resource names to DRA `DeviceClass` objects in Kubernetes 1.37+ so device allocation can migrate node-by-node without forcing workload manifests to adopt `ResourceClaim` immediately.
 - [`Migrate stored Kubernetes API objects with StorageVersionMigration`](topics/platform/kubernetes-storage-version-migration.md) — declaratively rewrite CRD/API objects to the current storage version in Kubernetes 1.37+, with observable completion gates for API-version retirement and encryption-key rotation.
+- [`Scale queue-driven workloads to zero with Kubernetes HPA 1.37`](topics/platform/kubernetes-hpa-scale-to-zero.md) — use external/object metrics that survive zero Pods, verify HPA ownership of the zero state, and measure cold-start plus metrics-pipeline risk.
 - [`One aggregate required check for conditional GitHub Actions CI`](topics/platform/github-actions-aggregate-required-check.md) — keep path-specific CI conditional while exposing one always-present status check to branch protection and merge queues.
 - [`Renovate + Gradle dependency verification metadata`](topics/platform/renovate-gradle-verification-metadata.md) — regenerate Gradle verification metadata in the same Renovate dependency-update PR with tightly allowlisted post-upgrade commands.
 

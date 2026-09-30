@@ -85,6 +85,27 @@ Track at least:
 
 Large static tool catalogs are a recurring tax. Prefer dynamic tool search or CLI/gateway resolution when the model only needs a small subset of a large catalog.
 
+#### Shape requests for cache reuse
+
+Treat request ordering as part of harness economics.
+
+Keep the stable, high-reuse prefix small:
+
+```text
+stable system/tool contract
+  -> cache boundary where supported
+  -> variable skills/subagents/environment
+  -> growing conversation
+```
+
+Re-evaluate old model-specific scaffolding as models improve. Remove prompt rules one group at a time and A/B test a representative workload instead of assuming every historical workaround is still useful.
+
+Keep high-frequency or boot-critical tools in static context and discover low-frequency tools on demand. Measure token use, cost, latency, tool-call errors and task success together.
+
+Cursor reports that this class of harness changes reduced user token cost by 7% without measured quality loss in production traffic. It also reports roughly 66% system-prompt reduction, a 60% reduction in static built-in-tool description tokens after dynamic loading, and 20% fewer cold cache misses after reorganizing stable and variable request layers. Treat the percentages as Cursor-specific, but reuse the measurement method.
+
+Subagents are another context boundary, not a free optimization. Fresh context can reduce inherited history, while coordination can create duplicate exploration or obsolete work. Measure both.
+
 ### 5. Move chatty deterministic loops out of the model loop
 
 If a workflow requires polling, pagination, filtering or joining deterministic results, execute that loop in code and return only the useful result to the model.
@@ -100,7 +121,26 @@ Uber measured more than 50% token reduction even on small SQL examples, and much
 
 When evaluating a model/harness change, run the same benchmark corpus before and after. Otherwise adoption, workload mix and model capability changes can make fleet-wide spend trends misleading.
 
-### 7. Surface cost where decisions happen
+### 7. Track queue growth as workflow inventory
+
+As code generation gets faster, the constraint can move into review, CI, verification, deployment or feedback handling.
+
+Track for each major transition:
+
+```text
+queue depth
+oldest-item age
+active time
+wait time
+throughput
+rework / revert signal
+```
+
+Optimize the stage where work is accumulating, not automatically the model/tool stage with the highest spend.
+
+Augment describes using this rule while expanding its internal software factory: agents were added where queues formed rather than in SDLC order, while deployment remained deterministic and humans kept consequential product, architecture and production-risk decisions. Their reported throughput, cycle-time and revert improvements are longitudinal company evidence, not a controlled estimate of agent causality.
+
+### 8. Surface cost where decisions happen
 
 Expose live session cost and post-run diagnostics to developers and platform owners. Flag concrete anti-patterns such as:
 
@@ -141,6 +181,8 @@ For one existing coding or review agent:
 ## Sources
 
 - https://www.uber.com/pr/en/blog/efficient-software-factory/
+- Cursor, *Improved token efficiency for longer agent runs* (2026-09-23): https://cursor.com/blog/improved-token-efficiency
+- Augment Code, *Beyond AI Coding Agents: How We Built Augment's Software Factory* (2026-09-11, updated 2026-09-18): https://www.augmentcode.com/blog/beyond-ai-coding-agents-how-we-built-augments-software-factory
 
 ## Related
 
