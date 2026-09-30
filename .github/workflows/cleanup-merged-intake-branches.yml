@@ -45,8 +45,8 @@ jobs:
 
           # Backfill cleanup for historical merged PRs whose source branch
           # belongs to this repository. Fork branches are intentionally ignored.
-          gh api --paginate "repos/$REPO/pulls?state=closed&per_page=100" \
-            --jq --arg repo "$REPO" '.[] | select(.merged_at != null and .head.repo.full_name == $repo) | .head.ref' |
+          gh api --paginate "repos/$REPO/pulls?state=closed&per_page=100" |
+            jq -r --arg repo "$REPO" '.[] | select(.merged_at != null and .head.repo.full_name == $repo) | .head.ref' |
           while IFS= read -r ref; do
             delete_ref "$ref"
           done
