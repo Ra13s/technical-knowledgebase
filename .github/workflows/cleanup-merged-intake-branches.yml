@@ -1,4 +1,4 @@
-name: Cleanup merged intake branches
+name: Cleanup merged branches
 
 on:
   pull_request:
@@ -16,22 +16,25 @@ jobs:
     if: >-
       github.event_name == 'push' ||
       (github.event.pull_request.merged == true &&
-       startsWith(github.event.pull_request.head.ref, 'agent/kb-intake-'))
+       github.event.pull_request.head.repo.full_name == github.repository &&
+       github.event.pull_request.head.ref != github.event.repository.default_branch)
     runs-on: ubuntu-latest
     steps:
-      - name: Delete merged intake branches
+      - name: Delete merged same-repository branches
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
           EVENT_NAME: ${{ github.event_name }}
           HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         shell: bash
         run: |
           set -euo pipefail
 
           delete_ref() {
             local ref="$1"
-            echo "Deleting merged/stale branch: $ref"
+            [[ -z "$ref" || "$ref" == "$DEFAULT_BRANCH" ]] && return 0
+            echo "Deleting merged branch: $ref"
             gh api -X DELETE "repos/$REPO/git/refs/heads/$ref" >/dev/null 2>&1 || true
           }
 
@@ -40,16 +43,10 @@ jobs:
             exit 0
           fi
 
-          # One-time/backfill cleanup for historical merged intake PRs.
+          # Backfill cleanup for historical merged PRs whose source branch
+          # belongs to this repository. Fork branches are intentionally ignored.
           gh api --paginate "repos/$REPO/pulls?state=closed&per_page=100" \
-            --jq '.[] | select(.merged_at != null) | .head.ref' |
+            --jq --arg repo "$REPO" '.[] | select(.merged_at != null and .head.repo.full_name == $repo) | .head.ref' |
           while IFS= read -r ref; do
-            case "$ref" in
-              agent/kb-intake-*|docs/cloneable-chatgpt-intake-system)
-                delete_ref "$ref"
-                ;;
-            esac
+            delete_ref "$ref"
           done
-
-          # This pre-intake branch has no unique commits and is fully behind main.
-          delete_ref "agent/improve-source-registry"
