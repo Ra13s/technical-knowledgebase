@@ -17,6 +17,56 @@ The intake workflow itself is reusable:
 
 The prompt lives in Git deliberately. A scheduled ChatGPT task can stay small and load the current prompt from the repository at the start of every run, so improvements to the system are versioned and automatically picked up later.
 
+## Run briefs
+
+A compact human-readable record of what each intake changed in our engineering model. Full source-by-source synthesis remains under [`intakes/`](intakes/).
+
+### 2026-09-30 — Profile the work before optimizing it
+
+**Main idea:** once an agent system is working, optimize the bottleneck revealed by cross-run evidence rather than the component that is easiest to measure. Cursor, AgentPProf and Augment all point toward the same operating loop: profile repeated work, find the dominant token/time/queue hotspot, change one thing, and re-measure on the same workload.
+
+**Added:** semantic trajectory profiling for agent fleets, JDK 27 JFR in-process redaction, and Kubernetes 1.37 HPA scale-to-zero. **Improved:** agent-fleet economics now includes cache-shaped request design, progressive tool disclosure, subagent coordination cost, and queue growth as workflow inventory.
+
+**Try next:** build a semantic flamegraph over 50–100 frozen agent sessions, A/B a cache-shaped request layout, and add queue-age metrics across task → review → CI → verification.
+
+[Read the full 2026-09-30 intake →](intakes/2026-09-30.md)
+
+<details>
+<summary><strong>2026-09-26 — Put guarantees in infrastructure, not in “be careful” prompts</strong></summary>
+
+**Main idea:** retry safety, execution evidence and authorization-grade state are system-boundary properties. The reasoning plane can stay probabilistic; the effect plane needs stable operation identity and idempotency; the evidence plane needs authoritative telemetry outside the agent's writable workspace.
+
+**Added:** idempotent side-effect contracts for agent tools, external authoritative agent telemetry, and Spring AI TypeSafe Jev decision gates. The useful boundary is simple: if duplicate effects matter, fix the tool contract; if auditability matters, record outside the task workspace; if the result is only a branch/score/classification, consider a typed decision primitive before another generative call.
+
+**Try next:** inject lost-ack/late-commit/redelivery faults into one mutating tool, reconstruct an unattended run from control-plane telemetry alone, and benchmark a Jev cascade against a current chat-model classifier.
+
+[Read the full 2026-09-26 intake →](intakes/2026-09-26.md)
+</details>
+
+<details>
+<summary><strong>2026-09-22 — Every autonomous claim needs identity, proof and lifecycle state</strong></summary>
+
+**Main idea:** “the model found it”, “the config changed” or “the request succeeded” are too weak when downstream state matters. High-autonomy systems should attach explicit identity, independent evidence and observable completion to important claims and transitions.
+
+**Added:** proof-gated agentic security review, workload-class capacity isolation with bounded recovery, and Kubernetes `StorageVersionMigration`. Google Mantis showed discovery should be separated from trust; Datadog showed recovery itself can become shared-system load; Kubernetes made hidden stored-object rewrites first-class and observable.
+
+**Try next:** compare generic vs proof-gated security review, chaos-test dual retry budgets across many concurrent agents, and verify workload identity survives every model/tool/queue/CI hop.
+
+[Read the full 2026-09-22 intake →](intakes/2026-09-22.md)
+</details>
+
+<details>
+<summary><strong>2026-09-18 — Turn organizational knowledge into executable capabilities</strong></summary>
+
+**Main idea:** repeatable expert knowledge becomes far more reusable when it is packaged as a versioned playbook with explicit tools, permissions, validation and outputs instead of being pasted into ever-larger prompts. LinkedIn CAPT, DoorDash Flux and Spring AI Agent Skills independently converge on progressive discovery plus deterministic capability enforcement.
+
+**Added:** executable agent playbooks, Java 26 HTTP/3 via `HttpClient`, and a Kubernetes DRA migration bridge that preserves existing workload contracts. **Improved:** search-based optimization now requires proving the benchmark resembles production and freezing the oracle before the agent starts optimizing against it.
+
+**Try next:** encode one real internal procedure as a playbook, pilot a repository-local Spring `SkillsTool`, canary HTTP/3 and record the negotiated protocol, or migrate one accelerator pool to DRA without touching workload manifests.
+
+[Read the full 2026-09-18 intake →](intakes/2026-09-18.md)
+</details>
+
 ## Canonical knowledge
 
 ### Java
