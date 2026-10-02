@@ -122,6 +122,23 @@ After `## Synthesis`, include the operational sections:
 
 The synthesis is durable knowledge about the intake itself: someone reading it months later should understand why that run mattered without opening every canonical entry or source article. Avoid generic industry commentary and avoid merely repeating the PR body.
 
+README RUN BRIEF — VISIBLE HISTORY
+Every successful intake must also update the repository root `README.md` with a compact, human-readable brief for that run.
+
+The README brief is not a copy of the full intake note. It should let someone scanning the repository understand in under a minute why the run mattered.
+
+For each run:
+- prepend the newest brief at the top of a `## Run briefs` section;
+- keep the newest run expanded and visible;
+- keep older briefs individually readable, preferably inside `<details>` blocks so the README stays compact;
+- include the strongest cross-source idea / "aha";
+- name the important canonical additions or existing entries improved;
+- include 1-3 concrete experiments, deferred items, or implications when useful;
+- link to the full `intakes/YYYY-MM-DD.md` note;
+- write editorial prose, not an administrative changelog.
+
+The README brief and full intake note serve different purposes: README is the visible history; `intakes/` holds the durable detailed synthesis. A normal intake is not ready to merge if its README run brief is missing.
+
 QUALITY AND EXPLORATION BAR
 A run with 1-3 genuinely useful canonical additions is better than 10 weak ones, and zero is valid. But do not confuse a small output with a narrow search. Explore beyond familiar sources and vary both companies and search directions between runs. Prefer primary documentation and direct engineering writeups; use independent evidence/papers for effectiveness claims. Distinguish demonstrated behavior from inference. Company blog marketing copy without implementation detail should be rejected quickly.
 
