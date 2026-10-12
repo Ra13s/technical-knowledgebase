@@ -21,6 +21,8 @@ The prompt lives in Git deliberately. A scheduled ChatGPT task can stay small an
 
 Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/). These are meant to be readable summaries of what the run actually taught us; the full discovery/synthesis stays under [`intakes/`](intakes/).
 
+- [2026-10-12 — Evaluate the reviewer, constrain the side effect](briefs/2026-10-12.md)
+- [2026-10-04 — Separate adaptive behavior from authoritative state](briefs/2026-10-04.md)
 - [2026-09-30 — Profile the work before optimizing it](briefs/2026-09-30.md)
 - [2026-09-26 — Put guarantees in infrastructure, not in “be careful” prompts](briefs/2026-09-26.md)
 - [2026-09-22 — Every autonomous claim needs identity, proof and lifecycle state](briefs/2026-09-22.md)
@@ -71,6 +73,7 @@ Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/
 - [`Gate coding-agent harness configuration as a supply chain`](topics/ai/agent-harness-supply-chain-gates.md) — lint persistent agent configuration at install and assembly boundaries; pin runtime tool dependencies and gate only validated, deterministic defect classes.
 - [`Resolve repository instructions by target path`](topics/ai/path-scoped-repository-instructions.md) — compose only ancestor instructions relevant to the active path, refresh them as tools move through a monorepo, and bound/observe instruction context explicitly.
 - [`Contain coding agents at the environment boundary first`](topics/ai/environment-first-agent-containment.md) — keep filesystem, network, process and credential blast radius deterministic; treat model safety and approval dialogs as additional layers rather than the final boundary.
+- [`Evaluate AI code reviewers with grounded and augmented findings`](topics/ai/reviewbench-code-review-evaluation.md) — evaluate frozen PR diffs against known and newly validated findings, with human audit and production-aligned cost/quality metrics.
 - [`Precision-first multi-stage AI code review`](topics/ai/precision-first-multi-stage-code-review.md) — localize risk first, gather bounded primary evidence, use review-specific context, explicitly try to disprove candidate findings, then dedupe and publish only high-signal comments.
 - [`Gate agentic security findings with localized threat models and proof`](topics/ai/agentic-security-presubmit-pipeline.md) — scan changes with live threat context, then require structural reachability or sandbox reproduction before surfacing findings or asking an agent to patch them.
 - [`Bind agent approvals to the exact side effect`](topics/ai/enforcement-bound-agent-approvals.md) — require mandatory human approval at the execution boundary, bind it to exact arguments/target/identity/expiry, and revalidate before executing.
@@ -91,6 +94,7 @@ Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/
 - [`Migrate Kubernetes extended resources to DRA without changing workloads`](topics/platform/kubernetes-dra-extended-resource-migration.md) — map existing resource names to DRA `DeviceClass` objects in Kubernetes 1.37+ so device allocation can migrate node-by-node without forcing workload manifests to adopt `ResourceClaim` immediately.
 - [`Migrate stored Kubernetes API objects with StorageVersionMigration`](topics/platform/kubernetes-storage-version-migration.md) — declaratively rewrite CRD/API objects to the current storage version in Kubernetes 1.37+, with observable completion gates for API-version retirement and encryption-key rotation.
 - [`Scale queue-driven workloads to zero with Kubernetes HPA 1.37`](topics/platform/kubernetes-hpa-scale-to-zero.md) — use external/object metrics that survive zero Pods, verify HPA ownership of the zero state, and measure cold-start plus metrics-pipeline risk.
+- [`Git 2.56 safe conflict staging`](topics/platform/git-2-56-safe-conflict-staging.md) — use git add --resolved to stage only currently conflicted files without leftover markers; still inspect the staged diff and tests.
 - [`One aggregate required check for conditional GitHub Actions CI`](topics/platform/github-actions-aggregate-required-check.md) — keep path-specific CI conditional while exposing one always-present status check to branch protection and merge queues.
 - [`Renovate + Gradle dependency verification metadata`](topics/platform/renovate-gradle-verification-metadata.md) — regenerate Gradle verification metadata in the same Renovate dependency-update PR with tightly allowlisted post-upgrade commands.
 
