@@ -193,6 +193,12 @@ On 50-100 historical PRs with known review outcomes, compare:
 
 Measure precision, recall, comments/PR, acceptance, known-bug coverage, cost and latency. Prefer the smallest architecture that reaches an acceptable precision target.
 
+## Reproducible review evaluation
+
+Use a frozen benchmark with independent, multi-source known findings and separate **grounded** versus **augmented** quality metrics before changing reviewer topology. A valid issue absent from the golden set should be independently judged, not automatically dismissed, and augmented recall must not be directly compared across reviewers because its denominator is agent-specific. Keep a private organization-specific holdout to guard against public benchmark overfitting.
+
+See [Evaluate AI code reviewers with grounded and augmented findings](reviewbench-code-review-evaluation.md) for the ReviewBench runner and measurement workflow.
+
 ## Sources
 
 - https://www.uber.com/us/en/blog/ureview/
