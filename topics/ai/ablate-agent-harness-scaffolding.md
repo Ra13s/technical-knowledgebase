@@ -81,6 +81,22 @@ edge-of-capability task
 
 Anthropic found an evaluator remained useful for work near the model's capability boundary while becoming unnecessary overhead for easier work after the model improved. The reusable decision is to route by measured task difficulty/reliability, not by habit.
 
+## Model × task-family calibration
+
+A September 2026 controlled study compared two harnesses across ten models and three task families (issue repair, repository generation and repository-centric tasks), then isolated structured tools, compaction, planning, general/task-specific subagents and lazy skills. The authors found harness benefits were neither uniform nor monotonic: some richer harness features became less helpful for stronger models on localized repair, while structured tool use and task-specific subagents were more dependable on their repository-generation set. General subagents and compaction could hurt that task family.
+
+**Do not extrapolate an ablation win from one task class to another.** Freeze a matrix of model version × task type × single changed component, for example:
+
+| Model | Task family | Harness variant | Success | Escaped defects | Human repair | p95 | Tokens |
+|---|---|---|---:|---:|---:|---:|---:|
+| M1/M2 | localized bug fix | baseline / no compaction | ... | ... | ... | ... | ... |
+| M1/M2 | multi-file migration | baseline / specialist subagent | ... | ... | ... | ... | ... |
+| M1/M2 | repository generation | baseline / generic subagent | ... | ... | ... | ... | ... |
+
+Keep security and authorization constraints constant. Prefer task-specific subagents with bounded contexts/tools when the task justifies them, but validate on our own tasks before changing defaults. The paper's scores are from a bounded model/benchmark sample, not a universal ranking of features.
+
+Source: https://arxiv.org/abs/2609.32459
+
 ## Failure modes / caveats
 
 - **Benchmark drift:** an ablation set that contains only easy tasks will incorrectly tell you that verification layers are useless.
