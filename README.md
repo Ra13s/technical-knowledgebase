@@ -21,6 +21,7 @@ The prompt lives in Git deliberately. A scheduled ChatGPT task can stay small an
 
 Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/). These are meant to be readable summaries of what the run actually taught us; the full discovery/synthesis stays under [`intakes/`](intakes/).
 
+- [2026-10-16 — Acceptance beyond the generated patch](briefs/2026-10-16.md)
 - [2026-10-12 — Evaluate the reviewer, constrain the side effect](briefs/2026-10-12.md)
 - [2026-10-04 — Separate adaptive behavior from authoritative state](briefs/2026-10-04.md)
 - [2026-09-30 — Profile the work before optimizing it](briefs/2026-09-30.md)
@@ -58,6 +59,8 @@ Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/
 
 ### Coding agents / AI protocols
 
+- [`Repository policy and trajectory compliance gates`](topics/ai/repository-policy-compliance-gates.md) — enforce applicable contribution rules on observed agent actions and final PR artifacts, not just functional tests.
+- [`Compile agent-built prototypes out of production`](topics/ai/compile-out-prototype-app-variants.md) — separate sandbox and release build graphs and verify packaged artifacts contain no unfinished features.
 - [`Evidence-gated coding-agent edits`](topics/ai/evidence-gated-coding-agent-edits.md) — require observable current-state evidence before edits, bind CI/tests to the exact head SHA, and verify the authoritative postcondition after merge.
 - [`Narrow-contract background coding agent`](topics/ai/narrow-contract-background-coding-agent.md) — run background agents only from explicit triggers, reject underspecified tasks before editing, use a fresh-context reviewer, and preserve normal human/CI/security gates.
 - [`Deterministic outer loop for coding-agent platforms`](topics/ai/deterministic-outer-loop-agent-platform.md) — keep snapshots, validation, retries, lifecycle hooks and publication under deterministic workflow control while the model handles reasoning and edits.
@@ -94,6 +97,7 @@ Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/
 - [`Migrate Kubernetes extended resources to DRA without changing workloads`](topics/platform/kubernetes-dra-extended-resource-migration.md) — map existing resource names to DRA `DeviceClass` objects in Kubernetes 1.37+ so device allocation can migrate node-by-node without forcing workload manifests to adopt `ResourceClaim` immediately.
 - [`Migrate stored Kubernetes API objects with StorageVersionMigration`](topics/platform/kubernetes-storage-version-migration.md) — declaratively rewrite CRD/API objects to the current storage version in Kubernetes 1.37+, with observable completion gates for API-version retirement and encryption-key rotation.
 - [`Scale queue-driven workloads to zero with Kubernetes HPA 1.37`](topics/platform/kubernetes-hpa-scale-to-zero.md) — use external/object metrics that survive zero Pods, verify HPA ownership of the zero state, and measure cold-start plus metrics-pipeline risk.
+- [`OpenTelemetry Java agent 3.0 preview migration`](topics/platform/opentelemetry-java-agent-3-preview-migration.md) — compare database/messaging telemetry, alert units and trace topology before upgrading.
 - [`Git 2.56 safe conflict staging`](topics/platform/git-2-56-safe-conflict-staging.md) — use git add --resolved to stage only currently conflicted files without leftover markers; still inspect the staged diff and tests.
 - [`One aggregate required check for conditional GitHub Actions CI`](topics/platform/github-actions-aggregate-required-check.md) — keep path-specific CI conditional while exposing one always-present status check to branch protection and merge queues.
 - [`Renovate + Gradle dependency verification metadata`](topics/platform/renovate-gradle-verification-metadata.md) — regenerate Gradle verification metadata in the same Renovate dependency-update PR with tightly allowlisted post-upgrade commands.
