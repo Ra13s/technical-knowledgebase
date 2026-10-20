@@ -21,6 +21,7 @@ The prompt lives in Git deliberately. A scheduled ChatGPT task can stay small an
 
 Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/). These are meant to be readable summaries of what the run actually taught us; the full discovery/synthesis stays under [`intakes/`](intakes/).
 
+- [2026-10-20 — Crash recovery and durable engineering workflows](briefs/2026-10-20.md)
 - [2026-10-16 — Acceptance beyond the generated patch](briefs/2026-10-16.md)
 - [2026-10-12 — Evaluate the reviewer, constrain the side effect](briefs/2026-10-12.md)
 - [2026-10-04 — Separate adaptive behavior from authoritative state](briefs/2026-10-04.md)
@@ -59,6 +60,8 @@ Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/
 
 ### Coding agents / AI protocols
 
+- [`Durable agent tool effects and fencing`](topics/ai/durable-agent-tool-effects-and-fencing.md) — recover from worker crashes without blindly replaying ambiguous tool operations.
+
 - [`Repository policy and trajectory compliance gates`](topics/ai/repository-policy-compliance-gates.md) — enforce applicable contribution rules on observed agent actions and final PR artifacts, not just functional tests.
 - [`Compile agent-built prototypes out of production`](topics/ai/compile-out-prototype-app-variants.md) — separate sandbox and release build graphs and verify packaged artifacts contain no unfinished features.
 - [`Evidence-gated coding-agent edits`](topics/ai/evidence-gated-coding-agent-edits.md) — require observable current-state evidence before edits, bind CI/tests to the exact head SHA, and verify the authoritative postcondition after merge.
@@ -92,6 +95,8 @@ Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/
 - [`Microcks Testcontainers contract testing`](topics/testing/microcks-testcontainers-contract-tests.md) — generate mocks and provider conformance tests from the same OpenAPI/AsyncAPI artifact inside local JUnit/CI tests.
 
 ### Platform / CI / dependency automation
+
+- [`Durable document ingestion`](topics/platform/durable-document-ingestion-pipeline.md) — recover download/parse/chunk/index stages with parser caching, callback correlation and verification.
 
 - [`Rootless Kubernetes nodes for agent and test sandboxes`](topics/platform/rootless-kubernetes-agent-sandbox.md) — run Kubernetes 1.37+ node components in a Linux user namespace for lower-privilege agent/integration-test clusters; validate CNI/CSI compatibility explicitly.
 - [`Migrate Kubernetes extended resources to DRA without changing workloads`](topics/platform/kubernetes-dra-extended-resource-migration.md) — map existing resource names to DRA `DeviceClass` objects in Kubernetes 1.37+ so device allocation can migrate node-by-node without forcing workload manifests to adopt `ResourceClaim` immediately.
