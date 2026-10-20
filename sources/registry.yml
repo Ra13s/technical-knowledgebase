@@ -63,3 +63,16 @@ sources:
     type: engineering-blog
     priority: high
     topics: [api-design, distributed-systems, developer-experience, ai]
+
+  - name: Kong Engineering
+    type: engineering-blog
+    priority: medium
+    topics: [coding-agents, github-actions, developer-platform, security]
+  - name: Temporal Engineering
+    type: engineering-blog
+    priority: high
+    topics: [durable-execution, agent-systems, distributed-systems, data-pipelines]
+  - name: Netflix TechBlog
+    type: engineering-blog
+    priority: medium
+    topics: [platform, infrastructure, reliability, gpu-compute]
