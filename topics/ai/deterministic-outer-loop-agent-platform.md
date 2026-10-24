@@ -97,6 +97,30 @@ A deterministic backstop must still respect validation gates: `after_agent -> op
 
 Expose logs, observability, repository-local instructions, plugins/MCP and organization-specific build tools. Avoid an AI-only parallel toolchain that does not match how engineers validate work.
 
+## Thin router and composable domain workflows
+
+Meta's October 2026 *Thin Orchestrator* provides a domain-heavy version of the deterministic outer loop. Its router is approximately 1,300 lines with a **fixed seven-step contract**, not a general-purpose reasoning agent:
+
+~~~text
+read specialist instructions
+ -> check target already exists (no-op / duplicate protection)
+ -> gather required user inputs
+ -> discover existing configuration from the repo
+ -> reliability/reviewer gate
+ -> delegate one domain step with scoped context
+ -> publish structured result or actionable error
+~~~
+
+Only delegation requires LLM reasoning; the checks, discovery of fixed fields, workflow progression and result handling are ordinary orchestration. Define reusable **workflow templates** as explicit sequences of domain specialists, for example `schema -> validation -> population -> testing`. Add a new product workflow by composing existing specialists before inventing new agents.
+
+Each specialist declares its knowledge sources, required input schema, execution plan, code-discovery heuristics and error-to-recovery map. Fetch relevant knowledge files **only at invocation time**. A specialist should not inherit another domain's entire context; the router should know *who* to dispatch, not the specialist's implementation details.
+
+Meta reports 14 specialists, 20+ templates, and column configuration decreasing from days of preparation to under an hour. These are first-party observations from one specialized internal platform, not a comparative reliability experiment. A key tradeoff is that explicit templates cost maintenance but constrain agent improvisation.
+
+For a prototype, implement one onboarding workflow as a YAML state machine with typed required fields, no-op detection and a deterministic review gate. Reuse two specialists from another workflow without modifying their prompts; test a missing field, an already-completed task, a failed verification step and resume-from-checkpoint.
+
+Source: https://engineering.fb.com/2026/10/19/ml-applications/thin-orchestrator-ai-agent-architecture/
+
 ## Why it is useful
 
 The pattern separates probabilistic reasoning from deterministic control. Agents can adapt to failures without being trusted to orchestrate publication, CI state or infinite retry loops.
