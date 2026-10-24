@@ -21,6 +21,7 @@ The prompt lives in Git deliberately. A scheduled ChatGPT task can stay small an
 
 Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/). These are meant to be readable summaries of what the run actually taught us; the full discovery/synthesis stays under [`intakes/`](intakes/).
 
+- [2026-10-24 — Enforce agent effects; bound work before execution](briefs/2026-10-24.md)
 - [2026-10-20 — Crash recovery and durable engineering workflows](briefs/2026-10-20.md)
 - [2026-10-16 — Acceptance beyond the generated patch](briefs/2026-10-16.md)
 - [2026-10-12 — Evaluate the reviewer, constrain the side effect](briefs/2026-10-12.md)
@@ -78,6 +79,8 @@ Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/
 - [`Protect shared agent platforms with workload classes and bounded recovery`](topics/ai/agent-platform-capacity-isolation.md) — inventory full agent trajectories, propagate workload identity, reserve capacity by service class and bound recovery per run and across shared dependencies.
 - [`Gate coding-agent harness configuration as a supply chain`](topics/ai/agent-harness-supply-chain-gates.md) — lint persistent agent configuration at install and assembly boundaries; pin runtime tool dependencies and gate only validated, deterministic defect classes.
 - [`Resolve repository instructions by target path`](topics/ai/path-scoped-repository-instructions.md) — compose only ancestor instructions relevant to the active path, refresh them as tools move through a monorepo, and bound/observe instruction context explicitly.
+- [`Operation-level sandbox and temporal tool policies`](topics/ai/operation-level-agent-sandbox-policy.md) — put cross-tool, history-aware policy at trusted execution boundaries alongside OS containment; verify instrumentation coverage.
+- [`Identity-scoped MCP gateway`](topics/ai/identity-scoped-mcp-gateway.md) — share remote tools across humans and bots with different identities, per-call permission checks, downstream credential brokerage and bounded catalogs.
 - [`Contain coding agents at the environment boundary first`](topics/ai/environment-first-agent-containment.md) — keep filesystem, network, process and credential blast radius deterministic; treat model safety and approval dialogs as additional layers rather than the final boundary.
 - [`Evaluate AI code reviewers with grounded and augmented findings`](topics/ai/reviewbench-code-review-evaluation.md) — evaluate frozen PR diffs against known and newly validated findings, with human audit and production-aligned cost/quality metrics.
 - [`Precision-first multi-stage AI code review`](topics/ai/precision-first-multi-stage-code-review.md) — localize risk first, gather bounded primary evidence, use review-specific context, explicitly try to disprove candidate findings, then dedupe and publish only high-signal comments.
@@ -96,6 +99,7 @@ Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/
 
 ### Platform / CI / dependency automation
 
+- [`Time-window pushdown before aggregation`](topics/platform/time-window-before-aggregation.md) — use an indexed date range before grouping or paginating time-series counts; verify scan work and current-state semantics.
 - [`Durable document ingestion`](topics/platform/durable-document-ingestion-pipeline.md) — recover download/parse/chunk/index stages with parser caching, callback correlation and verification.
 
 - [`Rootless Kubernetes nodes for agent and test sandboxes`](topics/platform/rootless-kubernetes-agent-sandbox.md) — run Kubernetes 1.37+ node components in a Linux user namespace for lower-privilege agent/integration-test clusters; validate CNI/CSI compatibility explicitly.
