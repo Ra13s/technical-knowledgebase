@@ -21,6 +21,7 @@ The prompt lives in Git deliberately. A scheduled ChatGPT task can stay small an
 
 Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/). These are meant to be readable summaries of what the run actually taught us; the full discovery/synthesis stays under [`intakes/`](intakes/).
 
+- [2026-10-28 — Narrow authority before scaling automation](briefs/2026-10-28.md)
 - [2026-10-24 — Enforce agent effects; bound work before execution](briefs/2026-10-24.md)
 - [2026-10-20 — Crash recovery and durable engineering workflows](briefs/2026-10-20.md)
 - [2026-10-16 — Acceptance beyond the generated patch](briefs/2026-10-16.md)
@@ -36,6 +37,7 @@ Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/
 ### Java
 
 - [`Switching over evolving sealed APIs`](topics/java/evolving-sealed-api-switches.md) — keep compiler exhaustiveness for hierarchies we own, but control the runtime failure path for independently evolving sealed dependencies.
+- [`Java 27 hybrid post-quantum TLS 1.3`](topics/java/java-27-hybrid-tls-key-exchange.md) — canary JSSE hybrid named groups, confirm real negotiation, test middleboxes and classic fallback.
 - [`Java 26 HTTP/3 with java.net.http.HttpClient`](topics/java/java-26-http3-httpclient.md) — opt into HTTP/3 with the standard client, choose fallback/discovery behavior explicitly and verify the negotiated response version on the real network path.
 - [`Java 27 JFR in-process redaction`](topics/java/java-27-jfr-in-process-redaction.md) — keep selected sensitive startup data out of supported JFR events at capture time, preserve the runtime defaults and canary-test the exact coverage.
 
@@ -61,6 +63,7 @@ Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/
 
 ### Coding agents / AI protocols
 
+- [`Workload-owned Copilot SDK authentication`](topics/ai/copilot-sdk-workload-identity.md) — use organization installation tokens or scoped Actions credentials for unattended inference with independent repo-write gates.
 - [`Durable agent tool effects and fencing`](topics/ai/durable-agent-tool-effects-and-fencing.md) — recover from worker crashes without blindly replaying ambiguous tool operations.
 
 - [`Repository policy and trajectory compliance gates`](topics/ai/repository-policy-compliance-gates.md) — enforce applicable contribution rules on observed agent actions and final PR artifacts, not just functional tests.
@@ -99,6 +102,7 @@ Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/
 
 ### Platform / CI / dependency automation
 
+- [`Per-key write serialization with object-store replicas`](topics/platform/per-key-write-serialization-object-store-replicas.md) — coordinate only contending mutable refs, durably store immutable objects and handle stale reads explicitly.
 - [`Time-window pushdown before aggregation`](topics/platform/time-window-before-aggregation.md) — use an indexed date range before grouping or paginating time-series counts; verify scan work and current-state semantics.
 - [`Durable document ingestion`](topics/platform/durable-document-ingestion-pipeline.md) — recover download/parse/chunk/index stages with parser caching, callback correlation and verification.
 
