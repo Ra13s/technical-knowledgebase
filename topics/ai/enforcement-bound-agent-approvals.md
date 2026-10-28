@@ -127,6 +127,25 @@ Do not log secrets or sensitive payloads unnecessarily; store stable identifiers
 - Do not put approval credentials or reusable high-privilege bearer tokens into model-visible context when the model does not need them.
 - Approval does not remove the need for normal authorization. The approver must itself be authorized to approve that action.
 
+## Probabilistic permission assistants are a convenience layer
+
+GitHub Copilot shipped **Assisted permissions** generally on 2026-10-26 (CLI, Copilot app and VS Code). Instead of requiring approval for *every* command/path/URL, a model judges some eligible requests clearly safe and auto-approves them, while other requests prompt the user. In the CLI, an interactive user can select `/permissions assisted`; CI uses `--assisted-approval`. Enterprise policy and explicit allow/deny rules still apply.
+
+**Do not treat a model's “safe” classification as authoritative authorization.** A useful layered design is:
+
+```text
+static capability allowlist / denylist
+   -> model-assisted permission triage (reduce prompts)
+   -> mandatory deterministic authorization for privileged effects
+   -> exact-operation human approval where policy requires
+   -> OS sandbox / credential scopes / GitHub protected branches
+   -> executor evidence / audit
+```
+
+Measure `autoApprovedSafe`, `autoApprovedUnsafe` (from adversarial replay), escalations, false blocks and unattended-completion rate on real command/path/URL requests. Define privileged actions (production deploy, protected merge, secret access, identity or IAM change) as **never bypassing** the trusted enforcement gate regardless of the assistant's verdict. A safer UX that still asks about consequential effects is different from a workflow that lets a model unilaterally authorize them.
+
+Sources: https://github.blog/changelog/2026-10-26-github-copilot-assisted-permissions-generally-available/ and https://docs.github.com/en/copilot/how-tos/copilot-cli/use-copilot-cli/allowing-tools
+
 ## Sources
 
 - Christian Posta, Human-in-the-loop Authorization Patterns for Agents (2026-08-24): https://blog.christianposta.com/human-in-the-loop-authorization-patterns-for-agents/
