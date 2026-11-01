@@ -43,7 +43,7 @@ TEMPORAL_NAMESPACE=my-caller-namespace \
   ./gradlew -q :core:execute -PmainClass=io.temporal.samples.nexusstandalone.StandaloneClientStarter
 ~~~
 
-The Java SDK's typed client API (imports and fully configured \`stubs\`/\`options\` are in the linked sample):
+The Java SDK's typed client API (imports and fully configured `stubs`/`options` are in the linked sample):
 
 ~~~java
 NexusClient nexusClient = NexusClient.newInstance(stubs, options);
@@ -66,7 +66,7 @@ NexusOperationHandle<GreetingOutput> handle =
 GreetingOutput output = handle.getResult();
 ~~~
 
-For a synchronous caller, \`service.execute(...)\` blocks until completion, and \`executeAsync(...)\` returns a \`CompletableFuture\`. Both require a caller-provided ID. Use the operation handle's \`getResult()\`, \`getResultAsync()\` or timed wait; handle \`NexusOperationException\` distinctly from a transient transport error.
+For a synchronous caller, `service.execute(...)` blocks until completion, and `executeAsync(...)` returns a `CompletableFuture`. Both require a caller-provided ID. Use the operation handle's `getResult()`, `getResultAsync()` or timed wait; handle `NexusOperationException` distinctly from a transient transport error.
 
 Use the CLI to observe the authoritative operation state:
 
@@ -77,7 +77,7 @@ temporal nexus operation result \
   --namespace my-caller-namespace --operation-id my-greet-op
 ~~~
 
-\`NexusClient.listNexusOperationExecutions(query)\` and \`countNexusOperationExecutions(query)\` expose operational inspection APIs. An Operation ID is a critical part of the business protocol: use an application-stable ID so retries and client disconnects do not create duplicate business operations.
+`NexusClient.listNexusOperationExecutions(query)` and `countNexusOperationExecutions(query)` expose operational inspection APIs. An Operation ID is a critical part of the business protocol: use an application-stable ID so retries and client disconnects do not create duplicate business operations.
 
 ## Recommended HTTP-service state model
 
@@ -107,7 +107,7 @@ Be careful at the DB-write / Nexus-start boundary: there is no distributed trans
 
 ## Experiment
 
-Build a two-service Java 17+ test using \`temporalio/samples-java\`. Begin an operation from an HTTP endpoint, kill the caller process immediately after acceptance, restart it and retrieve the same operation's result. Separately kill the handler worker and verify retry/recovery, then simulate duplicate POSTs and assert one business effect. Measure p95 completion latency, ambiguity recovery time and duplicate-effect count. Repeat with one dedicated proxy Workflow and document the operational/cost tradeoff.
+Build a two-service Java 17+ test using `temporalio/samples-java`. Begin an operation from an HTTP endpoint, kill the caller process immediately after acceptance, restart it and retrieve the same operation's result. Separately kill the handler worker and verify retry/recovery, then simulate duplicate POSTs and assert one business effect. Measure p95 completion latency, ambiguity recovery time and duplicate-effect count. Repeat with one dedicated proxy Workflow and document the operational/cost tradeoff.
 
 ## Sources
 
