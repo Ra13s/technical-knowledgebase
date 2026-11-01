@@ -15,7 +15,7 @@ A May 2026 empirical study introduced TaintAWI, analyzing 13,392 agentic workflo
 
 - an Actions workflow sends issue/PR text to Codex, Claude, Copilot, Gemini or a custom LLM;
 - agent outputs become environment variables, step outputs, shell interpolations or GitHub API mutations;
-- the workflow runs on untrusted fork PRs, outside collaborators, comments or \`pull_request_target\`;
+- the workflow runs on untrusted fork PRs, outside collaborators, comments or `pull_request_target`;
 - a coding agent can create a PR, run scripts or access package-publishing credentials;
 - reviewing new agentic actions or tool integrations in CI.
 
@@ -48,10 +48,10 @@ Sinks:
 ### Rules to enforce
 
 1. **Tag origins and derived results.** An output of a model call stays untrusted unless independently constrained to a fixed enum or mapped to a preapproved action. The model is not a sanitizer.
-2. **Remove raw interpolation.** Never put an untrusted \`github.event.issue.body\` (or an LLM-generated output) directly inside a \`run:\` script. Instead pass untrusted event text through a quoted environment variable or file and treat it as *data*, not shell instructions. Quoting is necessary but not sufficient: never feed that data into \`eval\`, shell flags, \`bash -c\`, template engines or another interpreter.
+2. **Remove raw interpolation.** Never put an untrusted `github.event.issue.body` (or an LLM-generated output) directly inside a `run:` script. Instead pass untrusted event text through a quoted environment variable or file and treat it as *data*, not shell instructions. Quoting is necessary but not sufficient: never feed that data into `eval`, shell flags, `bash -c`, template engines or another interpreter.
 3. **Constrain P2A capabilities.** Use sandboxed, read-only agent tools by default; authorize writes only in a separate stage that validates specific operation schemas, repository/path allowlists, count limits and base SHA.
 4. **Constrain P2S outputs.** Parse model JSON against a strict schema, reject unknown fields, check enumerated decisions in trusted code and construct the actual command/API call from trusted literals. Do not execute a model-supplied command string.
-5. **Cross-check workflow privilege context.** Pay special attention to \`pull_request_target\`, token scopes, fork checkouts, inherited environment secrets, cache/artifact writes and reusable action pinning. A low-privilege issue author's text must not silently gain high-privilege write capabilities.
+5. **Cross-check workflow privilege context.** Pay special attention to `pull_request_target`, token scopes, fork checkouts, inherited environment secrets, cache/artifact writes and reusable action pinning. A low-privilege issue author's text must not silently gain high-privilege write capabilities.
 6. **Fail closed on indeterminate provenance.** If an action wrapper or dynamic script cannot be analyzed, mark it for review rather than silently assuming it has no path to a sensitive sink.
 
 ### Defensive example (non-executable agent output)
@@ -62,16 +62,16 @@ An agent may suggest a decision as data:
 {"decision":"needs-docs","target":"main","summary":"New API endpoint"}
 ~~~
 
-A separate trusted step must validate \`decision\` against a fixed enum, hard-code/allowlist \`target\`, construct a PR request using an allowlisted file diff and retain the source SHA. It must *not* accept an arbitrary \`command\`, \`script\` or unrestricted \`repository\` field. An invalid output produces a blocked result, not a best-effort shell call.
+A separate trusted step must validate `decision` against a fixed enum, hard-code/allowlist `target`, construct a PR request using an allowlisted file diff and retain the source SHA. It must *not* accept an arbitrary `command`, `script` or unrestricted `repository` field. An invalid output produces a blocked result, not a best-effort shell call.
 
 ## Testing
 
 Write a regression matrix with:
 - benign issue/PR content -> one permitted suggestion;
 - untrusted issue text containing instructions to modify unrelated files -> no privileged mutation;
-- malformed JSON and an extra \`script\` property -> schema reject;
+- malformed JSON and an extra `script` property -> schema reject;
 - output containing an unexpected branch or repo -> authorization reject;
-- a fork PR under \`pull_request_target\` -> no write token or secrets in agent job;
+- a fork PR under `pull_request_target` -> no write token or secrets in agent job;
 - replay of a legitimate event -> at most one logical write under a stable dedup key.
 
 Capture actual GitHub Actions permission scopes, tool calls and resulting GitHub objects as the oracle. Static flags should lead to review; they are not proof of exploitability.
@@ -86,7 +86,7 @@ Capture actual GitHub Actions permission scopes, tool calls and resulting GitHub
 
 ## Prototype experiment
 
-Inventory \`.github/workflows/*.yml\` and any referenced action/agent definitions. Build a small static linter that tags \`github.event.*.body\`, model outputs and retrieved repo content as tainted; trace references through \`with\`, \`env\`, \`steps.*.outputs\` into \`run\` and write-scoped tools. Start with warning-only mode and a small set of confirmed positive/negative fixtures. Compare findings with a manual review, patch real unsafe flows and keep regression examples in CI.
+Inventory `.github/workflows/*.yml` and any referenced action/agent definitions. Build a small static linter that tags `github.event.*.body`, model outputs and retrieved repo content as tainted; trace references through `with`, `env`, `steps.*.outputs` into `run` and write-scoped tools. Start with warning-only mode and a small set of confirmed positive/negative fixtures. Compare findings with a manual review, patch real unsafe flows and keep regression examples in CI.
 
 ## Sources
 
