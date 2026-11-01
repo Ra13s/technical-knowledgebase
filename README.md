@@ -21,6 +21,7 @@ The prompt lives in Git deliberately. A scheduled ChatGPT task can stay small an
 
 Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/). These are meant to be readable summaries of what the run actually taught us; the full discovery/synthesis stays under [`intakes/`](intakes/).
 
+- [2026-11-01 — Separate agent proposals from publish permissions](briefs/2026-11-01.md)
 - [2026-10-28 — Narrow authority before scaling automation](briefs/2026-10-28.md)
 - [2026-10-24 — Enforce agent effects; bound work before execution](briefs/2026-10-24.md)
 - [2026-10-20 — Crash recovery and durable engineering workflows](briefs/2026-10-20.md)
@@ -63,6 +64,8 @@ Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/
 
 ### Coding agents / AI protocols
 
+- [`Compile repo agents into constrained GitHub Actions`](topics/ai/compiled-agentic-workflows-safe-outputs.md) — compile an agent workflow while mediating writes through allowlisted Safe Outputs, CI and review gates.
+- [`Audit agentic CI taint from issue text to privileged scripts`](topics/ai/agentic-ci-taint-flow-gates.md) — detect Prompt-to-Agent and Prompt-to-Script flows and verify that model output remains untrusted data.
 - [`Workload-owned Copilot SDK authentication`](topics/ai/copilot-sdk-workload-identity.md) — use organization installation tokens or scoped Actions credentials for unattended inference with independent repo-write gates.
 - [`Durable agent tool effects and fencing`](topics/ai/durable-agent-tool-effects-and-fencing.md) — recover from worker crashes without blindly replaying ambiguous tool operations.
 
@@ -101,6 +104,8 @@ Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/
 - [`Microcks Testcontainers contract testing`](topics/testing/microcks-testcontainers-contract-tests.md) — generate mocks and provider conformance tests from the same OpenAPI/AsyncAPI artifact inside local JUnit/CI tests.
 
 ### Platform / CI / dependency automation
+
+- [`Temporal Standalone Nexus Operations in Java`](topics/platform/temporal-standalone-nexus-java.md) — invoke one durable cross-service operation directly from Java, with stable IDs, idempotent handlers and crash recovery.
 
 - [`Per-key write serialization with object-store replicas`](topics/platform/per-key-write-serialization-object-store-replicas.md) — coordinate only contending mutable refs, durably store immutable objects and handle stale reads explicitly.
 - [`Time-window pushdown before aggregation`](topics/platform/time-window-before-aggregation.md) — use an indexed date range before grouping or paginating time-series counts; verify scan work and current-state semantics.
