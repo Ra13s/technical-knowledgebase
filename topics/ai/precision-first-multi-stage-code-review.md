@@ -159,6 +159,24 @@ DoorDash reports 60.2% of settled high/critical findings caused a code change in
 
 If a rule is cheap and reliably enforceable with a linter/static analyzer, keep it there. Use LLM review for semantic rules that normal analyzers cannot reliably identify.
 
+## Review-specific tool instructions can matter more than tool quality
+
+GitHub's July 2026 Copilot code-review migration is a useful counterexample to blindly replacing special-purpose tools with general CLI tools. When it switched its reviewer to shared `glob`, `grep` and `view` primitives, internal offline reviews **initially cost more and detected fewer useful issues**. Trace inspection showed broad repo browsing instead of diff-driven evidence collection. After adjusting the *instructions* to match review work, GitHub reported about **20% lower average review cost at similar review quality**. This is internal vendor evaluation evidence, not a proven general effect.
+
+Give the reviewer an explicit exploration contract:
+
+```text
+diff + change hypothesis
+  -> batch narrow glob/grep (symbol, caller, config, regression tests)
+  -> read exact file/range only after path is known
+  -> batch focused reads, avoid search/read thrashing
+  -> verify or reject one candidate with primary evidence
+```
+
+If a grep expression fails, retry with a simpler escaped search; if a path was guessed incorrectly, use glob to discover instead of guessing another file. On tool migrations, examine **trace shape** (search fan-out, read bytes, abandoned branches and retries) *as well as* final review quality. This extends the existing bounded-research rule with an explicit tool-migration regression experiment.
+
+Source: https://github.blog/ai-and-ml/github-copilot/better-tools-made-copilot-code-review-worse-heres-how-we-actually-improved-it/
+
 ## Repeated evaluation for stochastic reviewers
 
 A single rerun is weak evidence that an issue disappeared because reviewer output is stochastic. Uber re-runs review multiple times on final code and uses semantic matching to estimate whether a posted issue was actually addressed.
