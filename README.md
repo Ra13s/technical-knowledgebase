@@ -21,6 +21,7 @@ The prompt lives in Git deliberately. A scheduled ChatGPT task can stay small an
 
 Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/). These are meant to be readable summaries of what the run actually taught us; the full discovery/synthesis stays under [`intakes/`](intakes/).
 
+- [2026-11-05 — Narrow contracts and common identity across agents, search and tracing](briefs/2026-11-05.md)
 - [2026-11-01 — Separate agent proposals from publish permissions](briefs/2026-11-01.md)
 - [2026-10-28 — Narrow authority before scaling automation](briefs/2026-10-28.md)
 - [2026-10-24 — Enforce agent effects; bound work before execution](briefs/2026-10-24.md)
@@ -73,6 +74,7 @@ Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/
 - [`Compile agent-built prototypes out of production`](topics/ai/compile-out-prototype-app-variants.md) — separate sandbox and release build graphs and verify packaged artifacts contain no unfinished features.
 - [`Evidence-gated coding-agent edits`](topics/ai/evidence-gated-coding-agent-edits.md) — require observable current-state evidence before edits, bind CI/tests to the exact head SHA, and verify the authoritative postcondition after merge.
 - [`Narrow-contract background coding agent`](topics/ai/narrow-contract-background-coding-agent.md) — run background agents only from explicit triggers, reject underspecified tasks before editing, use a fresh-context reviewer, and preserve normal human/CI/security gates.
+- [`Event-reducer orchestration for bounded coding-agent PRs`](topics/ai/event-reducer-coding-agent-orchestration.md) — pure state/event transitions, durable claims, isolated stages and bounded retries for recoverable low-risk draft-PR automation.
 - [`Deterministic outer loop for coding-agent platforms`](topics/ai/deterministic-outer-loop-agent-platform.md) — keep snapshots, validation, retries, lifecycle hooks and publication under deterministic workflow control while the model handles reasoning and edits.
 - [`Expose one agent harness through a stable event protocol`](topics/ai/stable-agent-harness-event-protocol.md) — keep thread/turn/item lifecycle, approvals and durable task state in one harness and expose it through a versioned bidirectional protocol to IDE, CLI, web and remote clients.
 - [`Build agent-addressable application feedback loops`](topics/ai/agent-addressable-application-feedback-loop.md) — give coding agents typed inspect/navigate/act control surfaces for running apps so UI validation is not bottlenecked on screenshots, simulator clicks or human narration.
@@ -105,6 +107,8 @@ Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/
 
 ### Platform / CI / dependency automation
 
+- [`Client journey trace forests`](topics/platform/client-journey-trace-forests.md) — group multiple separate client/server OTel request traces under an opaque page-context ID, with coordinated sampling and privacy gates.
+- [`Composable search index fragments`](topics/platform/composable-search-index-fragments.md) — project service-owned fields into a common index with shared bootstrap/CDC mapping, relationships and source-validation gates.
 - [`Temporal Standalone Nexus Operations in Java`](topics/platform/temporal-standalone-nexus-java.md) — invoke one durable cross-service operation directly from Java, with stable IDs, idempotent handlers and crash recovery.
 
 - [`Per-key write serialization with object-store replicas`](topics/platform/per-key-write-serialization-object-store-replicas.md) — coordinate only contending mutable refs, durably store immutable objects and handle stale reads explicitly.
