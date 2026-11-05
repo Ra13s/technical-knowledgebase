@@ -72,6 +72,30 @@ Eon hit a non-obvious constraint: **pre-indexing every MCP tool schema inflates 
 
 Eon had to implement an OAuth compatibility shim because its clients expected standard OAuth `state` (CSRF protection) while the managed service used session-URI binding. A shim must preserve identity, state integrity, redirect allowlists, expiry and session association. Never solve a handshake mismatch by disabling `state` validation.
 
+## Schema-derived discovery with owner-reviewed activation (Uber)
+
+Uber's October 1, 2026 MCP Gateway is a second production design, complementary to Eon's identity and credential model. It derives virtual MCP tool definitions from an existing **IDL registry**, rather than requiring every team to publish a native MCP server:
+
+~~~text
+IDL registry (Protobuf / Thrift) + native server heartbeats
+  -> Cadence-backed AutoCrawler on a schedule
+  -> extract method schema + comments / native tools/list
+  -> generate JSON tool description and source adapter
+  -> upsert DISABLED in registry
+  -> owning team reviews schema + AI-written description + diff
+  -> approve / activate / version / rollback
+  -> runtime gateway translates MCP <-> HTTP/gRPC/TChannel
+  -> authorize by caller + target tool at tools/call
+~~~
+
+**Discovery is not permission to expose or execute.** Every newly discovered tool is disabled until its service owner approves it; a change to a tool description requires an explicit config review. This is especially important if the description is synthesized by a model: changes to tool semantics are a supply-chain input for agents.
+
+At catalog scale, Uber uses an **incremental discovery surface**: `discover_server -> discover_tools -> get_tool_schema -> invoke_tool`. Coding agents instead commonly use Uber's `aifx mcp list/search/call` CLI and select file output to avoid loading huge responses into model context. A request-specific **response projection** can keep only specified nested fields from a larger tool result. Any projection must operate **after** the gateway's authorization and mandatory redaction; hiding a field from the model does not replace restricting it at the data source.
+
+Prototype: consume a small OpenAPI or protobuf schema, derive three tools but register them disabled, then require a service-owner approval before discoverability or execution. Modify the source schema and assert the tool remains disabled or approval-pending until reviewed. Benchmark tool-context tokens and result byte size with/without discovery/projection, while asserting that direct forbidden `tools/call` remains blocked.
+
+Uber reports 800+ servers and 5,000+ tools, but provides **no independent comparative proof** that its generator/gateway reduces security incidents. Source: https://www.uber.com/gp/en/blog/designing-mcp-gateway/ (2026-10-01).
+
 ## Failure modes and trade-offs
 
 - **Single shared dependency:** a gateway outage or bad policy can disrupt all developers and agents. Use HA, deadlines, per-target circuit breakers and an audited break-glass path.

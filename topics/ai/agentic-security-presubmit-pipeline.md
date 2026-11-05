@@ -142,6 +142,25 @@ Track at least:
 
 Google reports false-positive rates as low as 3% for some localized threat-model configurations and over 92% precision for a specialized triage agent. Those numbers demonstrate the architecture can work at Google scale; they are not portable thresholds.
 
+## Production reproduction oracle: Google's PageBreak
+
+Google's September 24, 2026 **PageBreak** design strengthens this entry with a concrete **validator independent of the proposing agent**. Its security-written, non-LLM validators execute class-specific checks in real application environments: controlled JavaScript execution for XSS, observed query manipulation/timing for SQL injection, outbound requests for SSRF and other controlled signals for vulnerabilities. These validators must run in authorized, isolated test environments with scoped credentials and rate limits.
+
+The pipeline is deliberately two-tiered:
+
+~~~text
+candidate vulnerability
+  -> validator for exact vulnerability class
+  -> confirmed exploitation evidence? -> developer finding
+  -> not confirmed / validator unavailable?
+       -> internal research queue + missing-capability log
+       -> no verified vulnerability claim
+~~~
+
+**Failed validation is not proof of safety.** PageBreak explicitly retains unverified candidates to seed future runs and reveal gaps in its validators, rather than spamming product teams. This adds a useful measurement pair: **confirmed yield and validation-coverage / false-negative indicators**, not only precision of reported alerts.
+
+Google says PageBreak found 500+ XSS vulnerabilities since becoming fully operational in January 2026 and describes near-zero false positives, but these are first-party observations in Google's unusually instrumented and authenticated environment; no independent recall measurement is provided. The differentiator is an independently engineered executable oracle, not model confidence. Source: https://blog.google/security/agentic-hacks-real-proofs-inside-googles-pagebreak-project/ (2026-09-24).
+
 ## Why it is useful
 
 The key design rule is:
