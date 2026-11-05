@@ -95,7 +95,7 @@ Uber Freight reports 40+ microservices, roughly 100 sources/tables, more than 70
 
 ## Prototype experiment
 
-Create a `shipment` index from three PostgreSQL tables (shipment, customer, stops). Bootstrap 10,000 shipments; stream updates through one CDC adapter; use an explicit reverse-link table and 1:N stop fold. Inject duplicate/out-of-order events, a customer name update affecting 2,000 shipments, a deleted stop, and a restart at the bootstrap/stream boundary. Assert no cross-owner overwrites, eventual convergence to authoritative SQL, <configured> p99 query latency, and a measured fan-out queue. Then dual-write the same fragments to a second index and compare results before swapping read aliases.
+Create a `shipment` index from three PostgreSQL tables (shipment, customer, stops). Bootstrap 10,000 shipments; stream updates through one CDC adapter; use an explicit reverse-link table and 1:N stop fold. Inject duplicate/out-of-order events, a customer name update affecting 2,000 shipments, a deleted stop, and a restart at the bootstrap/stream boundary. Assert no cross-owner overwrites, eventual convergence to authoritative SQL, p99 query latency under a locally agreed target (for example 500 ms in the 10,000-shipment fixture), and a measured fan-out queue. Then dual-write the same fragments to a second index and compare results before swapping read aliases.
 
 ## Sources
 
