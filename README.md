@@ -21,6 +21,7 @@ The prompt lives in Git deliberately. A scheduled ChatGPT task can stay small an
 
 Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/). These are meant to be readable summaries of what the run actually taught us; the full discovery/synthesis stays under [`intakes/`](intakes/).
 
+- [2026-11-09 — Bind engineering decisions to verified versions](briefs/2026-11-09.md)
 - [2026-11-05 — Narrow contracts and common identity across agents, search and tracing](briefs/2026-11-05.md)
 - [2026-11-01 — Separate agent proposals from publish permissions](briefs/2026-11-01.md)
 - [2026-10-28 — Narrow authority before scaling automation](briefs/2026-10-28.md)
@@ -65,6 +66,7 @@ Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/
 
 ### Coding agents / AI protocols
 
+- [`Revision-bound source graph navigation for coding agents`](topics/ai/revision-bound-source-graph-navigation.md) — retrieve bounded definitions, callers and impact evidence at the exact repository revision, then verify live source and tests.
 - [`Compile repo agents into constrained GitHub Actions`](topics/ai/compiled-agentic-workflows-safe-outputs.md) — compile an agent workflow while mediating writes through allowlisted Safe Outputs, CI and review gates.
 - [`Audit agentic CI taint from issue text to privileged scripts`](topics/ai/agentic-ci-taint-flow-gates.md) — detect Prompt-to-Agent and Prompt-to-Script flows and verify that model output remains untrusted data.
 - [`Workload-owned Copilot SDK authentication`](topics/ai/copilot-sdk-workload-identity.md) — use organization installation tokens or scoped Actions credentials for unattended inference with independent repo-write gates.
@@ -121,6 +123,7 @@ Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/
 - [`Scale queue-driven workloads to zero with Kubernetes HPA 1.37`](topics/platform/kubernetes-hpa-scale-to-zero.md) — use external/object metrics that survive zero Pods, verify HPA ownership of the zero state, and measure cold-start plus metrics-pipeline risk.
 - [`OpenTelemetry Java agent 3.0 preview migration`](topics/platform/opentelemetry-java-agent-3-preview-migration.md) — compare database/messaging telemetry, alert units and trace topology before upgrading.
 - [`Git 2.56 safe conflict staging`](topics/platform/git-2-56-safe-conflict-staging.md) — use git add --resolved to stage only currently conflicted files without leftover markers; still inspect the staged diff and tests.
+- [`GitHub Actions transitive dependency lockfiles`](topics/platform/github-actions-transitive-dependency-lockfiles.md) — lock direct/transitive action commits and repository IDs, verify reproducibility, and separately guard reusable workflows.
 - [`One aggregate required check for conditional GitHub Actions CI`](topics/platform/github-actions-aggregate-required-check.md) — keep path-specific CI conditional while exposing one always-present status check to branch protection and merge queues.
 - [`Renovate + Gradle dependency verification metadata`](topics/platform/renovate-gradle-verification-metadata.md) — regenerate Gradle verification metadata in the same Renovate dependency-update PR with tightly allowlisted post-upgrade commands.
 
