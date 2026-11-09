@@ -85,6 +85,41 @@ read(key, minimumVersion?)
 
 For versionless analytical or feed-like reads, accept bounded staleness explicitly; for an agent continuing after a push, require a minimum version/expected head SHA. Avoid using stale cache reads to decide mergeability, permissions or whether an external tool effect happened.
 
+## November 2026 refinement: atomic pack manifests, versioned reads and leased compaction
+
+GitHub's November 5 account of Project Rubicon makes the earlier high-level per-ref design concrete. The important additional invariant is that **publishing a ref and publishing the set of immutable objects it references must be one logical transaction**. Ref-CAS owns conditional mutable ref updates and pack-manifest entries; durable object storage owns immutable Git objects. A small replicated log assigns a monotonically increasing log sequence number (LSN).
+
+The write sequence is:
+
+```text
+writer -> build immutable pack
+       -> upload pack to durable blob store; verify completion/checksum
+       -> Ref-CAS transaction:
+            check expected ref version(s)
+            append pack manifest entry AND ref update(s) atomically
+       -> acknowledge commit LSN
+```
+
+Do not publish a ref that points to an unpublished manifest, or advertise a manifest before its object pack is durable. On failed CAS, an uploaded but unreferenced pack is eligible for *later* garbage collection; this is preferable to a dangling ref. Independent refs can progress concurrently, while ref conflicts still require conditional retry and revalidation.
+
+The read path uses a cheap **version query** before returning cached data. A replica can compare its local LSN with Ref-CAS and refresh its manifest/object view when stale; a request that depends on its own just-acknowledged write carries an LSN floor. A version check is a causal correctness primitive, not merely a cache-performance optimization.
+
+Project Rubicon also separates object compaction from serving. Background compactors lease hash-partitioned shards, select sealed input packs, create a replacement pack, **verify that the replacement contains exactly the same objects**, durably upload it and publish a new manifest entry before retiring old inputs in a later guarded manifest transaction. Actual blob garbage collection needs grace periods/reader safety and fencing against stale compactors.
+
+This is **GitHub's internal design**, not an API we can directly configure. GitHub reports an internal demonstration with about 5,000 concurrent agents and 7,200 pushes/s, but the architecture was in limited private preview at the November 5 publication. These figures do not establish transferable performance for a PostgreSQL/object-store implementation.
+
+### Extra prototype checks
+
+Extend the row-level CAS toy example with a `pack_manifest` table updated in the same transaction as the reference row; test the following crash points:
+
+- after immutable pack upload, **before** manifest/ref transaction: old ref remains valid and orphan cleanup is safe;
+- after transaction commit but before acknowledgement: retry with expected prior version returns conflict; authoritative read identifies the already committed effect;
+- while compaction output is uploaded but before adding its manifest entry: input packs remain readable;
+- after adding replacement pack but before retiring inputs: overlapping entries are tolerated and all objects resolve;
+- after old input retirement with a lagging replica: object deletion waits for a safe reader/GC boundary.
+
+Check no acknowledged ref ever points to a missing object, including under concurrent ref writers and compactor lease expiration.
+
 ## Evidence
 
 GitHub reports **99.99999%** of its repository population already had copies in Azure during the migration, with the hottest exceptions blocked by the previous global write serialization. Its internal tests of per-reference serialization found approximately **3–4× higher write throughput** with lower latency under realistic concurrent branch writes. GitHub reports 100–1,000 reads per write in many repositories, motivating cheap ephemeral read replicas.
@@ -108,6 +143,7 @@ Implement a small Postgres + object-store-backed `mutable_refs` toy service, the
 
 ## Sources
 
+- GitHub Engineering (2026-11-05), *Inside GitHub's new Git storage architecture*: https://github.blog/engineering/architecture-optimization/inside-githubs-new-git-storage-architecture/
 - GitHub Engineering (2026-10-21), *The bridge to agent-scale Git infrastructure*: https://github.blog/engineering/architecture-optimization/the-bridge-to-agent-scale-git-infrastructure/
 - GitHub Engineering (2026-10-06), *Building Git infrastructure for agent-scale development*: https://github.blog/engineering/building-git-infrastructure-for-agent-scale-development/
 
