@@ -21,8 +21,8 @@ The prompt lives in Git deliberately. A scheduled ChatGPT task can stay small an
 
 Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/). These are meant to be readable summaries of what the run actually taught us; the full discovery/synthesis stays under [`intakes/`](intakes/).
 
-- [2026-11-09 — Bind engineering decisions to verified versions](briefs/2026-11-09.md)- [2026-11-13 — Three states an agent must restore or verify](briefs/2026-11-13.md)
-
+- [2026-11-13 — Three states an agent must restore or verify](briefs/2026-11-13.md)
+- [2026-11-09 — Bind engineering decisions to verified versions](briefs/2026-11-09.md)
 - [2026-11-05 — Narrow contracts and common identity across agents, search and tracing](briefs/2026-11-05.md)
 - [2026-11-01 — Separate agent proposals from publish permissions](briefs/2026-11-01.md)
 - [2026-10-28 — Narrow authority before scaling automation](briefs/2026-10-28.md)
