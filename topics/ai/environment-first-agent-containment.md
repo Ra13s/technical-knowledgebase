@@ -105,7 +105,6 @@ For sensitive agent execution, do not equate a JavaScript/V8 isolate with a sepa
 
 ### Budget for observability lost to isolation
 
-
 VM/container boundaries can hide activity from host EDR or ordinary process telemetry. Decide early how security events, process/network activity and audit evidence escape the sandbox safely — for example via controlled OpenTelemetry export or host-side proxy logs.
 
 ## Match containment to the user and workflow
