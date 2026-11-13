@@ -39,12 +39,13 @@ UNSEEN -> CLAIMED -> RESULT_RECORDED -> SEALED
 
 The claim means *may have started*, not *did happen*. For a retryable model call, first check whether its answer is already in the transcript; only send another model request when no answer was saved.
 
-## Verification experiment
 ## Local checkpoint versus external effect boundary
 
 A recoverable model transcript, a workspace Git bundle, and an OS-level sandbox checkpoint are distinct artifacts. [Semantics-aware turn checkpoints](agent-sandbox-turn-checkpoint-restore.md) can preserve package installs, processes and sandbox files, but cannot rewind pushes, cloud calls, remote databases or host-mounted worktrees.
 
 Store `{run_id, turn_id, checkpoint_id, transcript_offset, effect_ledger_offset}` together. After restoring local state, fence superseded workers and reconcile claimed external effects from the authority before continuing. A snapshot without a matching transcript and effect-ledger offset is not a safe resume point.
+
+## Verification experiment
 
 
 Clone `https://github.com/temporalio/pi-temporal`; run its documented multi-worker chaos demo, which kills workers mid-task. For our own harness, inject deaths before the claim, after the claim, after the external effect and after saving the result. Assert that interrupted effects are not silently replayed, recorded results are reused, stale workers cannot append, and external state is inspected before reissue.
