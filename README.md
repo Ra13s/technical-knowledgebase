@@ -21,6 +21,7 @@ The prompt lives in Git deliberately. A scheduled ChatGPT task can stay small an
 
 Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/). These are meant to be readable summaries of what the run actually taught us; the full discovery/synthesis stays under [`intakes/`](intakes/).
 
+- [2026-11-13 — Three states an agent must restore or verify](briefs/2026-11-13.md)
 - [2026-11-09 — Bind engineering decisions to verified versions](briefs/2026-11-09.md)
 - [2026-11-05 — Narrow contracts and common identity across agents, search and tracing](briefs/2026-11-05.md)
 - [2026-11-01 — Separate agent proposals from publish permissions](briefs/2026-11-01.md)
@@ -59,6 +60,7 @@ Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/
 
 ### Spring / AI
 
+- [`Spring AI ordered message parts and durable sessions`](topics/spring/spring-ai-session-parts-replay.md) — preserve signed reasoning and tool-call order, JDBC session events and turn-safe compaction in a 2.1 RC pilot.
 - [`Spring AI HyDE query transformation`](topics/spring/spring-ai-hyde-retrieval.md) — turn conversational questions into answer-like retrieval queries when user vocabulary does not match indexed documentation; keep the hypothetical text out of answer evidence.
 - [`Spring AI structured output validation and self-correction`](topics/spring/spring-ai-structured-output-validation.md) — combine provider-native schema enforcement with bounded response validation/retry for typed LLM outputs.
 - [`Spring AI ToolSearchToolCallingAdvisor`](topics/spring/spring-ai-tool-search-advisor.md) — progressively disclose tools instead of injecting a large tool catalog into every model request.
@@ -66,6 +68,7 @@ Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/
 
 ### Coding agents / AI protocols
 
+- [`Checkpoint agent sandbox OS state at turn boundaries`](topics/ai/agent-sandbox-turn-checkpoint-restore.md) — use eBPF-guided ZFS/CRIU savepoints to restore local files/processes without confusing rollback with external side effects.
 - [`Revision-bound source graph navigation for coding agents`](topics/ai/revision-bound-source-graph-navigation.md) — retrieve bounded definitions, callers and impact evidence at the exact repository revision, then verify live source and tests.
 - [`Compile repo agents into constrained GitHub Actions`](topics/ai/compiled-agentic-workflows-safe-outputs.md) — compile an agent workflow while mediating writes through allowlisted Safe Outputs, CI and review gates.
 - [`Audit agentic CI taint from issue text to privileged scripts`](topics/ai/agentic-ci-taint-flow-gates.md) — detect Prompt-to-Agent and Prompt-to-Script flows and verify that model output remains untrusted data.
@@ -104,6 +107,7 @@ Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/
 
 ### Testing / API contracts
 
+- [`Gate agent-generated tests with reference validity and mutants`](topics/testing/agent-generated-test-mutation-gates.md) — reject tests that pass but cannot catch independent requirement defects; pilot with TestSuiteBench and PIT.
 - [`Record/replay AI model calls with request-signed cassettes`](topics/testing/ai-model-vcr-record-replay-tests.md) — record realistic Spring AI/LangChain4j provider interactions once, then use strict request-matched playback for deterministic offline CI while keeping live evals separate.
 - [`Microcks Testcontainers contract testing`](topics/testing/microcks-testcontainers-contract-tests.md) — generate mocks and provider conformance tests from the same OpenAPI/AsyncAPI artifact inside local JUnit/CI tests.
 
