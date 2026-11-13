@@ -98,6 +98,12 @@ This applies beyond one client: startup hooks, local plugins, task definitions a
 The agent loop does not necessarily need to run inside the same VM/container as generated code. Keeping code/shell execution behind the hard boundary can preserve containment while allowing the control plane to remain responsive if the sandbox fails to start or crashes.
 
 ### Budget for observability lost to isolation
+### Treat language isolates and native glue as separate threat boundaries
+
+Check Point Research (August 2026) used memory-corruption defects in self-hosted Cloudflare workerd native glue to demonstrate cross-tenant exposure and a Code Mode sandbox escape. The exploits were verified on self-hosted environments, **not Cloudflare production**; Cloudflare states its managed Workers environment was patched.
+
+For sensitive agent execution, do not equate a JavaScript/V8 isolate with a separate OS/process address space. Ensure self-hosted workerd is patched to the vendor-fixed release (v1.20260619.1 or later for the reported bugs), constrain native tool capabilities, and run runtime-level malicious-code/isolation regression tests in a disposable environment. Add a container or VM boundary when tenant or credential blast radius warrants it. A patched runtime remains necessary within the container too.
+
 
 VM/container boundaries can hide activity from host EDR or ordinary process telemetry. Decide early how security events, process/network activity and audit evidence escape the sandbox safely — for example via controlled OpenTelemetry export or host-side proxy logs.
 
@@ -157,6 +163,7 @@ The experiment passes when the agent may attempt the action but the environment 
 ## Sources
 
 - Anthropic, *How we contain Claude across products* (2026-05-25): https://www.anthropic.com/engineering/how-we-contain-claude
+- Check Point Research, *When Agentic Glue Melts* (2026-08-07): https://research.checkpoint.com/2026/when-agentic-glue-melts/
 
 ## Related
 
