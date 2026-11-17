@@ -98,7 +98,7 @@ Measure: reference validity, hidden-scenario pass rate, regression escapes after
 
 - AWS, *How we built the agents that built AWS Emulator*, 2026-11-11: https://www.aboutamazon.com/news/aws/how-autonomous-ai-agents-built-aws-emulator
 - Public source, issue directories and service layout: https://github.com/aws/aws-emulator
-- AWS API model source: https://github.com/aws/aws-models
+- AWS API model source: https://github.com/aws/api-models-aws
 
 ## Related
 
