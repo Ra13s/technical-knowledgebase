@@ -17,7 +17,7 @@ Avoid treating emulator success as proof of IAM, networking, regional, concurren
 
 ## Quick-start for Java/Spring teams
 
-Use the documented Debian/RPM package on Linux or the vendor's Docker instructions for Windows/macOS. The emulator defaults to HTTPS at \`127.0.0.1:9297\`, generating **per-start** emulator-only credentials, SDK config and a self-signed trust store under \`~/.aws/emulator/9297/\`.
+Use the documented Debian/RPM package on Linux or the vendor's Docker instructions for Windows/macOS. The emulator defaults to HTTPS at `127.0.0.1:9297`, generating **per-start** emulator-only credentials, SDK config and a self-signed trust store under `~/.aws/emulator/9297/`.
 
 For a local Linux process after installation:
 
@@ -49,7 +49,7 @@ aws sts get-caller-identity
 # Expected Account == 000000000000, Arn ends in user/emulator.
 ~~~
 
-When running Maven/Gradle, **prefer setting the trust-store JVM args on the test process only** rather than globally: this trust store replaces the JDK default and will otherwise break unrelated HTTPS calls. The SDK for Java 2.x may require explicit \`SdkAdvancedClientOption.DISABLE_HOST_PREFIX_INJECTION\` for operations that rewrite the endpoint hostname. For S3 use IP \`127.0.0.1\`, not \`localhost\`, to avoid virtual-hosted bucket hostname routing.
+When running Maven/Gradle, **prefer setting the trust-store JVM args on the test process only** rather than globally: this trust store replaces the JDK default and will otherwise break unrelated HTTPS calls. The SDK for Java 2.x may require explicit `SdkAdvancedClientOption.DISABLE_HOST_PREFIX_INJECTION` for operations that rewrite the endpoint hostname. For S3 use IP `127.0.0.1`, not `localhost`, to avoid virtual-hosted bucket hostname routing.
 
 Test with the real AWS SDK, e.g. a Spring integration test that creates a queue, sends and receives one message, deletes it, and asserts the response. Use a fresh emulator process/port per test worker; AWS Emulator state is in memory only and is lost on exit.
 
@@ -66,7 +66,7 @@ SqsClient sqs = SqsClient.builder()
 
 ### AI coding-agent configuration
 
-AWS CLI v2.35.0+ provides the \`aws-emulator\` skill:
+AWS CLI v2.35.0+ provides the `aws-emulator` skill:
 
 ~~~sh
 aws agent-toolkit add-skill --skill-name aws-emulator --region us-east-1
@@ -77,17 +77,17 @@ A coding agent can use it to identify which AWS operations the project actually 
 ### Fidelity gate
 
 1. List all SDK operations used by the service and the stateful flows they compose.
-2. Read the **pinned emulator release's** fidelity scores and the public evaluation-suite \`manifest.jsonl\`; score existence of a tested operation separately from successful behavior.
+2. Read the **pinned emulator release's** fidelity scores and the public evaluation-suite `manifest.jsonl`; score existence of a tested operation separately from successful behavior.
 3. Run integration tests locally, with the network sandbox denying outbound AWS endpoints.
 4. For critical workflows or missing coverage, run the *same test* in an isolated AWS test account, compare semantic results and classify differences. Destroy disposable AWS resources.
 5. Keep a real AWS staging run for IAM, regions, real service limits, timeouts, race behavior, TLS and security.
 
-If a method returns 501, report \`unsupported\`, not a product bug or “passed mock”. If an operation has no oracle-backed fidelity test, mark it \`unverified\`, not compatible.
+If a method returns 501, report `unsupported`, not a product bug or “passed mock”. If an operation has no oracle-backed fidelity test, mark it `unverified`, not compatible.
 
 ## Failure modes and constraints
 
 - **No real IAM semantics or account isolation:** the emulator's generated credentials are for its local server only. Never disable SigV4 authentication in shared or untrusted environments.
-- **Accidental real-cloud calls:** missing endpoint variables can route tests to AWS; enforce an explicit identity check (\`000000000000\`) and block real AWS egress/credentials.
+- **Accidental real-cloud calls:** missing endpoint variables can route tests to AWS; enforce an explicit identity check (`000000000000`) and block real AWS egress/credentials.
 - **TLS trust store:** rotating emulator certs and a Java-specific PKCS12 truststore; replacing JVM defaults may break unrelated HTTPS.
 - **State lifetime / concurrency:** in-memory state disappears at restart. Use separate processes/ports or embedded mode (the latter is Rust-only, and compilation is substantial).
 - **Regional differences:** AWS Emulator is not region-dependent. A test passing in one emulated region says nothing about multi-region AWS behavior.
