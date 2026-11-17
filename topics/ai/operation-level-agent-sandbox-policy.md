@@ -79,6 +79,27 @@ For historical policy, Dogwood supports `when temporal { ... }` conditions on ev
 4. Run four successful notification posts inside ten minutes, then repeat with an API 500 and a denied request. Confirm the specified success/attempt semantics.
 5. Restart the box and try concurrent agents: check whether history survives and whether any desired **global** budget is actually enforced; for cross-run quotas use a central rate limiter, not only a local history.
 
+## Contextual intent enforcement (Uber, November 2026)
+
+Uber's production security design adds a useful layer beyond Dogwood-style deterministic action rules: **even a legitimately authorized API call can violate the user's actual goal**. At provisioning, register each agent's allowed persona, task intents, tool schemas and high-impact effects. At execution, bind any proposed side effect to an authenticated user request (with provenance/handoff chain), apply deterministic authorization **first**, and check contextual intent with a calibrated semantic classifier as an additional risk signal.
+
+~~~text
+authenticated user instruction + provenance
+  -> agent registry: declared intents, tool capabilities and risk class
+  -> deterministic IAM / quota / argument-policy enforcement
+  -> semantic action-vs-intent check on full relevant context
+       -> clearly aligned: allow within ordinary policy
+       -> suspicious / contradictory: block, request clarification or escalate
+  -> protected decision trace and executor result
+  -> replay/shadow-mode evaluation per agent before enforcement changes
+~~~
+
+Unlike an exact method/path prohibition, a semantic detector is probabilistic. **Never let its "safe" judgement override deterministic denials, credential scoping, OS containment or required human approvals**; tune thresholds per workflow using both attacks and legitimate borderline cases. For a pilot, run the contextual checker in shadow mode for 200 scrubbed tool calls, replay role-consistent and goal-hijacking cases, and measure false blocks, missed intent violations, p95 added latency and protected-effect outcomes. Promote only specific high-confidence classes to enforce mode, with a documented fallback when the semantic checker fails.
+
+Uber documents registry-driven lifecycle policies, runtime enforcement, prompt-provenance/evidence chaining and per-agent calibration. The November 6 article is a first-party design case study; it does not independently validate a portable false-positive rate.
+
+Source: https://www.uber.com/gb/en/blog/securing-ai-agents/ (2026-11-06).
+
 ## Why useful / evidence
 
 Box provides one policy language across shell, interpreted code, HTTP and MCP tool calls; it also separates credential custody from the untrusted agent and exposes refusal IDs to make recovery intelligible. Its OSS repository includes integration and native-filesystem tests, so we can experimentally verify specific claimed boundaries rather than trust a diagram.
@@ -101,6 +122,7 @@ On a supported macOS host, pin the Box source revision, add one read-only GitHub
 - AWS (2026-10-07), Strands Box launch: https://aws.amazon.com/blogs/opensource/introducing-strands-box-ai-agent-sandboxes-powered-by-dogwood/
 - Source, tests and current constraints: https://github.com/strands-agents/box
 - Dogwood language and temporal rules: https://dogwood-policy.github.io/dogwood/
+- Uber, contextual intent and runtime agent security: https://www.uber.com/gb/en/blog/securing-ai-agents/
 
 ## Related
 
