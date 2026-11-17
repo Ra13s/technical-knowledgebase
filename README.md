@@ -21,6 +21,7 @@ The prompt lives in Git deliberately. A scheduled ChatGPT task can stay small an
 
 Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/). These are meant to be readable summaries of what the run actually taught us; the full discovery/synthesis stays under [`intakes/`](intakes/).
 
+- [2026-11-17 — Independent evidence before autonomous scale](briefs/2026-11-17.md)
 - [2026-11-13 — Three states an agent must restore or verify](briefs/2026-11-13.md)
 - [2026-11-09 — Bind engineering decisions to verified versions](briefs/2026-11-09.md)
 - [2026-11-05 — Narrow contracts and common identity across agents, search and tracing](briefs/2026-11-05.md)
@@ -68,6 +69,8 @@ Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/
 
 ### Coding agents / AI protocols
 
+- [`Reference-oracle autonomous agent factory`](topics/ai/reference-oracle-autonomous-agent-factory.md) — independent reference-validated tests, issue finders and bounded fixers behind conformance and merge gates.
+- [`Evidence-gated production agent quality outer loop`](topics/ai/production-agent-quality-outer-loop.md) — sample deployed trajectories, cluster recurring failures, independently verify and diagnose against immutable deployed source.
 - [`Checkpoint agent sandbox OS state at turn boundaries`](topics/ai/agent-sandbox-turn-checkpoint-restore.md) — use eBPF-guided ZFS/CRIU savepoints to restore local files/processes without confusing rollback with external side effects.
 - [`Revision-bound source graph navigation for coding agents`](topics/ai/revision-bound-source-graph-navigation.md) — retrieve bounded definitions, callers and impact evidence at the exact repository revision, then verify live source and tests.
 - [`Compile repo agents into constrained GitHub Actions`](topics/ai/compiled-agentic-workflows-safe-outputs.md) — compile an agent workflow while mediating writes through allowlisted Safe Outputs, CI and review gates.
@@ -113,6 +116,7 @@ Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/
 
 ### Platform / CI / dependency automation
 
+- [`AWS Emulator local SDK integration tests`](topics/platform/aws-emulator-local-integration-tests.md) — run SigV4/HTTPS AWS SDK integration tests in isolated local emulator instances while retaining real-cloud fidelity gates.
 - [`Client journey trace forests`](topics/platform/client-journey-trace-forests.md) — group multiple separate client/server OTel request traces under an opaque page-context ID, with coordinated sampling and privacy gates.
 - [`Composable search index fragments`](topics/platform/composable-search-index-fragments.md) — project service-owned fields into a common index with shared bootstrap/CDC mapping, relationships and source-validation gates.
 - [`Temporal Standalone Nexus Operations in Java`](topics/platform/temporal-standalone-nexus-java.md) — invoke one durable cross-service operation directly from Java, with stable IDs, idempotent handlers and crash recovery.
