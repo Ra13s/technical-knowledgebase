@@ -15,7 +15,7 @@ This is a concrete safer primitive for a developer or an automated merge-conflic
 
 ## Recipe
 
-Require Git **2.56+** for the new option. After a merge stops with conflicts:
+Require **Git 2.56.1+** for this option on any runner that may process untrusted repositories. Git 2.56.0 introduced the option but is vulnerable to issues fixed in 2.56.1; older patched maintenance versions do not provide `--resolved`. After a merge stops with conflicts:
 
 ~~~sh
 git --version
@@ -47,6 +47,27 @@ Never use a successful `git add --resolved` as an auto-merge approval by itself.
 
 `git branch --delete-merged` can clean up *local* branches that Git considers merged into their upstream, with `--dry-run` available to inspect the candidates. Test this carefully in repositories that use squash merges: semantic inclusion of changes does not always equal commit-graph ancestry, and the command is not a substitute for verifying that the intended PR was merged. This is a convenience, not a recommended blind scheduled cleanup command.
 
+## November 2026 Git security patch floor for agent runners
+
+Git's **November 10, 2026** security release fixes six flaws in clone, reference handling, merge, patch and fast-import parsing. Install **2.56.1 or a patched maintenance release** (2.55.1, 2.54.1, 2.53.1, 2.52.1, 2.51.3 or 2.50.2). On an automation host that checks out, merges or imports untrusted repositories, this is a prerequisite independent of the agent sandbox.
+
+Specific high-risk paths include CVE-2026-111760 (malicious recursive clone reaching code execution), CVE-2026-113408 (unborn HEAD symref path traversal), CVE-2026-114467 and CVE-2026-105437 (merge-related memory corruption), CVE-2026-114469 (binary patch out-of-bounds read), and CVE-2026-114466 (unsafe fast-import features reading/writing files). Do **not** enable `git fast-import --allow-unsafe-features` on untrusted streams.
+
+Operational checklist:
+
+~~~sh
+git --version
+# Confirm the actual binary used by the agent runtime and by CI, not only the operator shell.
+command -v git
+# Pin a patched version in the runner/container image, then rebuild & redeploy.
+# On 2.56.1+, verify the new staging option is available:
+git add -h | grep -- --resolved
+~~~
+
+Check **bundled Git** versions in IDEs, agent sandboxes, CI images and tools that clone/merge on behalf of users. Patch before trusting repositories from external users. A version string alone is not sufficient for a distro backport: inspect its vendor advisory and package changelog. If immediate patching is impossible, avoid recursive clones and untrusted merges/imports as a temporary mitigation, never as a permanent substitute. This improves the *runtime boundary* for the conflict-staging tool; the command's semantic correctness caveats still apply.
+
+Source: https://github.blog/open-source/git/git-security-vulnerabilities-announced-7/
+
 ## Evidence and limitations
 
 Git's 2.56 release notes and current `git-add` documentation define the exact marker-check and staging semantics. GitHub's release write-up includes an example where a conflict is staged and an unrelated local edit is left unstaged. Unlike optimistic CI success or natural-language confidence, the option provides a deterministic *narrow selection* rule at the Git index boundary; human review and tests remain necessary for correctness.
@@ -62,6 +83,7 @@ Create a dirty integration-test repository with one conflicted Java file and one
 - https://github.blog/open-source/git/highlights-from-git-2-56/
 - https://git-scm.com/docs/git-add
 - https://git-scm.com/docs/git-branch
+- https://github.blog/open-source/git/git-security-vulnerabilities-announced-7/
 
 ## Related
 
