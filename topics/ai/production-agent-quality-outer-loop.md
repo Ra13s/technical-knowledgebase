@@ -33,13 +33,13 @@ scheduled / post-deploy trigger
 
 ### A concrete minimal implementation
 
-1. Instrument session and tool events with stable IDs: \`session_id\`, span parent ID, \`deployment_revision\`, \`agent_id\`, \`tool_name\`, tool inputs/result summaries, state/handoff changes and error codes. Keep evidence in an access-controlled, append-only telemetry store; store only data needed to evaluate quality.
+1. Instrument session and tool events with stable IDs: `session_id`, span parent ID, `deployment_revision`, `agent_id`, `tool_name`, tool inputs/result summaries, state/handoff changes and error codes. Keep evidence in an access-controlled, append-only telemetry store; store only data needed to evaluate quality.
 2. At deployment, capture a **read-only hash-addressed snapshot** of prompts, tool schemas, skills, orchestrator configuration and source files. Do not let a current branch or PR supply the diagnosis snapshot.
-3. Write \`goal.md\` describing actual product invariants, e.g. “confirm booking only after availability tool success” or “copy user restrictions across delegation.” Explicitly exclude subjective style nits from issue generation.
+3. Write `goal.md` describing actual product invariants, e.g. “confirm booking only after availability tool success” or “copy user restrictions across delegation.” Explicitly exclude subjective style nits from issue generation.
 4. Sample with random coverage **and** a bounded anomaly-focused slice. Keep denominators and sampling rules: an anomaly-only sampler cannot estimate production prevalence.
-5. Run a low-cost reviewer to produce schema-valid \`actual/expected\` findings with references to spans and required tool/state evidence. Group issues by mechanism; require a second reviewer/verifier to inspect the full original trajectories before creating a durable issue.
-6. Reuse a stable issue key for recurring clusters, but do not infer complete resolution merely because the issue was absent from a small sample. Maintain an explicit \`not_observed\` status and replay a held-out regression set before closing critical cases.
-7. Diagnose only on demand or for high-priority issues. Validate each proposed \`path:start-end\` against the pinned deployment snapshot; any invalid citation fails the diagnosis. A suspected external dependency failure should cite the failing handoff/tool evidence instead of inventing a source edit.
+5. Run a low-cost reviewer to produce schema-valid `actual/expected` findings with references to spans and required tool/state evidence. Group issues by mechanism; require a second reviewer/verifier to inspect the full original trajectories before creating a durable issue.
+6. Reuse a stable issue key for recurring clusters, but do not infer complete resolution merely because the issue was absent from a small sample. Maintain an explicit `not_observed` status and replay a held-out regression set before closing critical cases.
+7. Diagnose only on demand or for high-priority issues. Validate each proposed `path:start-end` against the pinned deployment snapshot; any invalid citation fails the diagnosis. A suspected external dependency failure should cite the failing handoff/tool evidence instead of inventing a source edit.
 8. Export a scrubbed, reproducible test trajectory to CI. Model-proposed patches must still traverse normal edit permissions, security review, branch protections, CI and human gates.
 
 Example finding record:
@@ -62,7 +62,7 @@ Example finding record:
 
 ### Trying Google's reference implementation
 
-The reference lives at \`google/adk-recipes/core/python/ambient-quality-agent\`. It expects Google Cloud telemetry (Cloud Trace/Logging or BigQuery), deployment snapshots in Cloud Storage, an isolated GCP project and Google ADK/agents-cli. The source's documented example flow is:
+The reference lives at `google/adk-recipes/core/python/ambient-quality-agent`. It expects Google Cloud telemetry (Cloud Trace/Logging or BigQuery), deployment snapshots in Cloud Storage, an isolated GCP project and Google ADK/agents-cli. The source's documented example flow is:
 
 ~~~sh
 agents-cli extension add "PATH_TO_AQUA_CHECKOUT"
