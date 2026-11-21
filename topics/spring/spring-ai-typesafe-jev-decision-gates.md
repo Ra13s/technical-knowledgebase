@@ -32,10 +32,12 @@ DecisionResponse response = decisionModel.call(
             ScoreQuestion.of("Customer satisfaction", "unhappy", "neutral", "happy"))
         .build());
 
-if (response.getYesNo("defect").isYes(0.9)) {
+if (!response.isRefused("defect") && response.getYesNo("defect").isYes(0.9)) {
     // Candidate for the warranty workflow, subject to normal policy.
 }
-int satisfactionLevel = response.getScore("satisfaction").getNearestLevel();
+if (!response.isRefused("satisfaction")) {
+    int satisfactionLevel = response.getScore("satisfaction").getNearestLevel();
+}
 ~~~
 
 Implementations auto-configured by Boot starters:
@@ -72,6 +74,7 @@ The older 0.1.0 integration exposed TypeSafeClient.systemOne(), Noul/Choice/Scor
 
 ## Caveats
 
+- Questions can be individually refused; check response.isRefused(name) before getYesNo/getScore/getChoice, or the typed accessor can throw IllegalStateException.
 - Decision probabilities are not guaranteed calibrated across models, classes or workloads.
 - Hosted providers have separate credentials/privacy/cost; local Ollama needs a compatible local model.
 - A Choice implementation can still prefer a wrong known option; make no-match eligibility explicit.
@@ -86,7 +89,7 @@ Collect 300 labeled routing cases including 20 adversarial “none of these tool
 
 - Spring AI 2.1 GA announcement and migration notice (2026-11-20): https://spring.io/blog/2026/11/20/spring-ai-2-1-0-GA-available-now/
 - Original TypeSafe Jev integration (2026-09-21): https://spring.io/blog/2026/09/21/spring-ai-typesafe-structured-judgment/
-- Spring AI Decision Models docs: https://docs.spring.io/spring-ai/reference/api/decision-models.html
+- Spring AI Decision Models docs: https://docs.spring.io/spring-ai/reference/api/decision.html
 
 ## Related
 
