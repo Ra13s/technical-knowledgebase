@@ -2,9 +2,9 @@
 
 ## What it is
 
-Spring AI **2.1.0-RC2** introduces ordered `MessagePart` content in messages and a structured event-log **Session Memory** API. For tool-using reasoning models, message text is not a faithful transcript: providers may require the exact ordering of thinking/reasoning, tool calls, tool results, redacted/signed reasoning, and opaque payload identifiers.
+Spring AI **2.1.0 GA (2026-11-20)** provides ordered `MessagePart` content in messages and a structured event-log **Session Memory** API. For tool-using reasoning models, message text is not a faithful transcript: providers may require the exact ordering of thinking/reasoning, tool calls, tool results, redacted/signed reasoning, and opaque payload identifiers.
 
-The key rule is **persist the complete ordered parts and session events, not just answer text**. Restore the provider-specific opaque metadata without editing or reordering it. The official documentation currently labels 2.1 as **release candidate/development**; stable 2.0.2 remains the production baseline unless the RC is deliberately piloted.
+The key rule is **persist the complete ordered parts and session events, not just answer text**. Restore the provider-specific opaque metadata without editing or reordering it. **2.1.0 is now GA**, with Spring Boot **4.2** as its baseline. RC2 and earlier 2.1 milestones lack the GA security/reliability fixes; upgrade them before production use. Spring AI 2.0.3 is the patched 2.0.x line. Do not assume 2.0.2 remains an appropriate security baseline.
 
 ## Use when
 
@@ -13,7 +13,7 @@ The key rule is **persist the complete ordered parts and session events, not jus
 - streaming tool responses must be aggregated without losing ordering/metadata;
 - a multi-instance Spring service needs durable turn history, compaction and session identity.
 
-## Implementation (2.1 RC pilot)
+## Implementation (Spring AI 2.1.0 GA)
 
 The session starter includes a JDBC repository, session service and advisors:
 
@@ -24,7 +24,7 @@ The session starter includes a JDBC repository, session service and advisors:
 </dependency>
 ~~~
 
-Choose a Spring AI 2.1 RC BOM and a compatible Spring Boot version; use a development database first. For external PostgreSQL/MySQL schema creation during a local pilot:
+Pin the Spring AI 2.1.0 GA BOM and Spring Boot 4.2; use a development database first. Preserve exact provider metadata in schema migration and verify the upgraded API against the official 2.1 GA docs. For external PostgreSQL/MySQL schema creation during a local pilot:
 
 ~~~properties
 spring.ai.session.repository.jdbc.initialize-schema=always
@@ -82,7 +82,7 @@ Build a round-trip matrix:
 - Preserving a conversation is not restoring its shell processes/filesystem or confirming external API effects.
 - The old constructors work, but `getParts()` is the canonical order and `getToolCalls()`/`getMedia()` return unmodifiable views.
 - One provider may reject replay metadata another accepts; provider-specific payloads should be replayed only to their origin.
-- Session Memory 2.1 is not GA. Pin RC2 in an isolated branch, rerun integration tests after release, and avoid promising long-term API stability.
+- **Spring AI 2.1.0 is GA**. Upgrade from 2.1 RC/M milestones: GA includes fixes for 13 CVEs and streaming/tool-call reliability. Run migration tests with Boot 4.2 and don't assume cached sessions or serialized parts from RC have unchanged semantics.
 
 ## Experiment
 
@@ -94,6 +94,7 @@ Prototype one Spring AI chat/tool service with JDBC Session Memory, a single rev
 - https://docs.spring.io/spring-ai/reference/2.1/api/session.html
 - https://docs.spring.io/spring-ai/reference/2.1/upgrade-notes.html
 - https://docs.spring.io/spring-ai/reference/2.1/api/chatmodel.html
+- Spring AI 2.1 GA release and security/upgrade notes (2026-11-20): https://spring.io/blog/2026/11/20/spring-ai-2-1-0-GA-available-now/
 
 ## Related
 
