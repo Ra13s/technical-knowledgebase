@@ -1,172 +1,98 @@
-# Spring AI TypeSafe Jev for typed decision gates
+# Spring AI DecisionModel for typed decisions and calibrated gates
 
 ## What it is
 
-A Spring AI Community integration for TypeSafe AI's hosted Jev decision model. Jev does not generate prose; it evaluates supplied state with typed questions and returns numeric truth values, categorical probabilities or rubric scores.
+Spring AI **2.1.0 GA (2026-11-20)** includes the core DecisionModel interface for typed **YesNo**, **Choice**, and **Score** questions. It replaces the former Spring AI TypeSafe community integration described in this entry: that standalone integration is being archived, and related judge, refinement and guardrail patterns now live in **Spring AI Decision Extensions** (community-maintained, initially 0.5.0). This path is stable in Spring AI core, but extensions evolve on their own release schedule.
 
-Use it when the result should feed code branching, thresholds or validation rather than become user-facing text.
-
-Version referenced here: `org.springaicommunity:*:0.1.0` (September 2026).
+Use typed decisions when the output feeds a branch, score, triage category, document reranker or tool router rather than a paragraph.
 
 ## Use when
 
-Good fits include:
+- Route/classify a request with known outcomes and a required confidence threshold.
+- Decide *whether* any discovered tool or retrieved document applies.
+- Risk-score content before applying non-security heuristics.
+- Evaluate model responses against small independent criteria with a bounded retry/escalation path.
 
-- route or classify a request;
-- score quality against explicit criteria;
-- gate an expensive model call;
-- filter or rerank retrieved documents;
-- decide whether any tool applies, then select one;
-- input/output screening;
-- bounded self-refinement after a failed typed check.
+Never treat a model's YesNo score as a replacement for IAM, sandboxing, mandatory human approval or deterministic policy.
 
-Keep a generative chat model for drafting, explaining and open-ended reasoning.
+## Implementation (2.1 GA)
 
-## Setup
+With a configured DecisionModel from a Spring AI starter, ask several narrow, explicitly described questions in one call:
 
-```xml
-<dependency>
-  <groupId>org.springaicommunity</groupId>
-  <artifactId>spring-ai-starter-typesafe</artifactId>
-  <version>0.1.0</version>
-</dependency>
-
-<dependency>
-  <groupId>org.springaicommunity</groupId>
-  <artifactId>typesafe-spring-ai</artifactId>
-  <version>0.1.0</version>
-</dependency>
-```
-
-```properties
-spring.ai.typesafe.api-key=${TYPESAFE_API_KEY}
-```
-
-The starter provides a `TypeSafeClient`.
-
-## Three decision primitives
-
-```java
-SystemOneResponse response = typeSafeClient.systemOne(
-    ticket,
-    Map.of(
-        "urgent", Noul.of("Does this convey urgency?"),
-        "team", Choice.builder()
-            .instructions("Which team should handle this?")
-            .option("billing", "Payments, invoicing, refunds")
-            .option("technical", "Bugs, outages, integrations")
-            .option("sales", "Pricing and upgrades")
-            .build(),
-        "frustration", Score.of(
-            "How frustrated is the customer?",
-            "Calm", "Frustrated", "Very angry")
-    )
-);
-
-double urgent = response.noulValue("urgent");
-String team = response.choiceValue("team");
-double confidence = response.choice("team").confidence();
-double frustration = response.scoreValue("frustration");
-```
-
-The primitives are:
-
-- `Noul`: yes/no judgement as a value in [0,1];
-- `Choice`: one label plus option probabilities/confidence;
-- `Score`: continuous position on an ordered rubric plus confidence.
-
-Prefer several narrow questions with explicit descriptions over one vague judgement.
-
-## Compose thresholds in code
-
-```java
-JevJudge judge = JevJudge.builder(typeSafeClient)
-    .score("helpfulness", helpfulnessRubric, 2.0)
-    .noul("is_plausible", plausible, 0.8)
-    .noul("is_grounded", grounded, 0.8)
-    .build();
-
-JevVerdict verdict = judge.judge(question, answer);
-```
-
-Treat `INCONCLUSIVE` separately from pass/fail. Low confidence is a routing signal for stronger evaluation or human review, not proof that the answer is wrong.
-
-## Bounded self-refinement
-
-```java
-ChatClient chatClient = ChatClient.builder(chatModel)
-    .defaultAdvisors(
-        JevSelfRefineAdvisor.builder()
-            .judge(judge)
-            .maxRepeatAttempts(3)
-            .failOnExhaustedAttempts(true)
+~~~java
+DecisionResponse response = decisionModel.call(
+    DecisionPrompt.builder()
+        .text(ticket)
+        .question("defect", YesNoQuestion.builder()
+            .text("Does the customer report a faulty product?")
+            .whenYes("An item fails to work as specified")
+            .whenNo("No product defect is described")
             .build())
-    .build();
-```
+        .question("satisfaction",
+            ScoreQuestion.of("Customer satisfaction", "unhappy", "neutral", "happy"))
+        .build());
 
-Workflow:
+if (!response.isRefused("defect") && response.getYesNo("defect").isYes(0.9)) {
+    // Candidate for the warranty workflow, subject to normal policy.
+}
+if (!response.isRefused("satisfaction")) {
+    int satisfactionLevel = response.getScore("satisfaction").getNearestLevel();
+}
+~~~
 
-```text
-generate
-  -> typed judgement
-      -> pass: return
-      -> fail: convert failed criteria to feedback
-               -> retry from original prompt
-  -> stop after bounded attempts
-```
+Implementations auto-configured by Boot starters:
 
-Use `failOnExhaustedAttempts(true)` when downstream code must not silently consume the advisor's best effort after the retry budget is exhausted.
+- OpenAiDecisionModel under spring.ai.openai.decision.
+- OllamaDecisionModel (local; default decision model d1-omni:600m).
+- SystemOneDecisionModel via spring-ai-starter-model-systemone; compatible endpoints include TypeSafe/Jev and other System One implementations.
 
-## Screening shape
+Prefer the official 2.1 documentation for **exact artifact names/provider setup**; don't reuse old org.springaicommunity TypeSafe 0.1.0 dependency snippets without a migration check.
 
-`JevGuardrailAdvisor` can screen both input and final output. Unlike self-refinement, a blocked decision should terminate rather than trigger repeated generation.
+### Composition
 
-Keep hard authorization, sandboxing and side-effect controls deterministic. A probabilistic decision model is a classifier/judge, not an authorization boundary.
+~~~text
+trusted input and policy constraints
+ -> typed decision(s) + probabilities
+ -> calibrate against labeled data
+ -> high-confidence: candidate route
+ -> low-confidence: abstain / stronger model / human
+ -> deterministic authorization and exact side-effect gate
+~~~
 
-## Spring AI integration points
+For RAG, DecisionDocumentReranker and DecisionDocumentFilter are now in Spring AI core. DecisionToolIndex can reject the “none applies” case before selecting the closest wrong tool. Community DecisionJudge, DecisionSelfRefineAdvisor and DecisionGuardrailAdvisor require separate community artifacts; cap retries and mark refusals explicitly.
 
-The project integrates with existing Spring AI SPIs:
+## Migration from Spring AI TypeSafe / Jev
 
-- `CallAdvisor`: self-refine and screening advisors;
-- `DocumentPostProcessor`: document filtering/reranking;
-- `ToolIndex`: tool selection;
-- `Evaluator`: evaluation.
+The older 0.1.0 integration exposed TypeSafeClient.systemOne(), Noul/Choice/Score, JevJudge, JevSelfRefineAdvisor and JevGuardrailAdvisor. Do not assume class/package compatibility.
 
-For tool selection, remember that a `Choice` always returns a winner. Ask a separate `Noul` such as "does any tool apply?" before choosing among tools.
-
-## Why it is useful
-
-Many AI pipelines spend a full generative model call to get a small decision and then parse prose or JSON back into code. A typed decision model makes the output shape and confidence explicit and can be composed with ordinary Java thresholds.
-
-> If the next step is a branch, score or classification rather than text generation, evaluate a typed decision primitive before reaching for another chat completion.
+1. Move to Spring AI 2.1.0 GA and the Boot 4.2 baseline; review GA security fixes.
+2. Replace custom TypeSafe calls with DecisionModel.call(DecisionPrompt) where possible.
+3. Move judges, self-refinement and guardrails to the separately versioned Decision Extensions project only where needed.
+4. Compare YesNo/Choice/Score outputs with a labeled holdout and re-tune thresholds.
+5. Exercise low-confidence, never-applicable-tool, provider failure and malformed/unknown result cases.
+6. Keep legacy adapters only behind an explicit deprecation boundary and remove the old community starter when migration is verified.
 
 ## Caveats
 
-- Version 0.1.0 is early and APIs can change.
-- Jev is a hosted external service and requires a TypeSafe API key.
-- It does not stream.
-- State must serialize as string/object/array/null; bare number/boolean state is rejected.
-- Per-document evaluation is one call per document; filter before reranking large sets.
-- `Choice` always chooses one option unless "none" is separately modelled.
-- Thresholds and confidence need calibration on your own labelled tasks.
-- TypeSafe's published performance comparisons are vendor benchmarks. Measure production latency and cost in your environment.
+- Questions can be individually refused; check response.isRefused(name) before getYesNo/getScore/getChoice, or the typed accessor can throw IllegalStateException.
+- Decision probabilities are not guaranteed calibrated across models, classes or workloads.
+- Hosted providers have separate credentials/privacy/cost; local Ollama needs a compatible local model.
+- A Choice implementation can still prefer a wrong known option; make no-match eligibility explicit.
+- Decision Extensions is **community maintained**, not the same support/compatibility promise as Spring AI core.
+- A high-confidence language-model score is not proof that access or execution is authorized.
 
 ## Prototype experiment
 
-Take one current Spring AI classifier/evaluator implemented with a chat model:
-
-1. collect 100-500 labelled examples;
-2. express the decision as narrow `Noul`, `Choice` or `Score` questions;
-3. tune thresholds on a held-out set;
-4. compare quality/calibration, p50/p95 latency and cost with the current approach;
-5. route low-confidence/`INCONCLUSIVE` cases to the existing stronger path;
-6. replace the existing path only if the cascade preserves required quality.
+Collect 300 labeled routing cases including 20 adversarial “none of these tools” examples. Compare the legacy Jev path with 2.1 GA DecisionModel on two providers and a plain structured-chat baseline. Measure accuracy, Brier score/calibration, abstentions, p95 latency, cost and misrouted actions. Re-run after an extension-model upgrade; gate any new unsafe decision path with deterministic target authorization.
 
 ## Sources
 
-- Spring, *Spring AI and TypeSafe Jev: Fast, Cheap, Structured Decisions* (2026-09-21): https://spring.io/blog/2026/09/21/spring-ai-typesafe-structured-judgment/
+- Spring AI 2.1 GA announcement and migration notice (2026-11-20): https://spring.io/blog/2026/11/20/spring-ai-2-1-0-GA-available-now/
+- Original TypeSafe Jev integration (2026-09-21): https://spring.io/blog/2026/09/21/spring-ai-typesafe-structured-judgment/
+- Spring AI Decision Models docs: https://docs.spring.io/spring-ai/reference/api/decision.html
 
 ## Related
 
-- [Spring AI structured output validation and self-correction](spring-ai-structured-output-validation.md)
+- [Structured output validation](spring-ai-structured-output-validation.md)
 - [Spring AI ToolSearchToolCallingAdvisor](spring-ai-tool-search-advisor.md)
+- [Modern MCP caller scope](spring-ai-modern-mcp-client-scope.md)

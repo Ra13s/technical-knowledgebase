@@ -151,6 +151,32 @@ Expose live session cost and post-run diagnostics to developers and platform own
 
 Prefer guidance and tiered budgets before blunt hard caps unless the workload requires strict limits.
 
+## Production rollout economics: Airbnb AirChat (November 2026)
+
+Airbnb's AirChat/AirChat Remote is an instructive counterexample to optimizing only **offline cost per task**. Its internal Bedrock gateway records model, tool client, team and user; CloudWatch supplies four separately priced token classes (uncached input, cache read, cache write, output), throttles and latency. Their seven fixed eval suites provide score and fully priced cost per task at each reasoning effort. **After rollout, measure average requests per user per week and spend per user per week as separate quantities.**
+
+One model looked stronger at roughly equal offline cost per task, but its production requests cost ~3x and users made ~3x as many requests; average weekly spend per user grew several-fold. Long self-directed sessions repeatedly read cached context, while output was only ~10% of request cost. When Airbnb moved heavy users to a model with a better eval score and ~1/6 eval task cost, spend on that group's main model fell to ~1/7 at similar request volume. This is a first-party operational observation, not a controlled causal study.
+
+Actionable rollout guardrail:
+
+~~~text
+release candidate
+ -> 7-style representative task suites (fixed setup, grader and data)
+ -> sweep model x reasoning effort
+ -> choose defaults and enforce effort ceilings at gateway
+ -> canary by user/team
+ -> compare offline cost/task to live:
+      four token classes, cache ratio, requests/user/week, spend/user/week,
+      p95 latency, TimeToFirstToken, OTPS, throttles, accepted outcomes
+ -> re-select or roll back when the behavior mix changes
+~~~
+
+For Bedrock deployments, calculate **OTPS = OutputTokenCount / (InvocationLatency - TimeToFirstToken) * 1000** when latency is in milliseconds. Track EstimatedTPMQuotaUsage and your own reservation model: quota admission reserves uncached input + cache writes + max_tokens, while cached reads can be cheap in quota terms but still material on the bill. Carefully reducing excessive max_tokens may improve request admission without changing final consumption; inspect stopReason for truncation. Request attribution needs gateway principal identity / STS session tags or role separation; an app-wide role hides the actual user. Restrict model invocation logs, which may include code and prompts.
+
+Experiment extension: run a 2-week canary with equal task mix, report requests/user and spend/user against acceptance/revert rates, and detect regressions when a model encourages longer or more frequent sessions. Avoid punishing useful adoption merely to optimize spend.
+
+Source: Airbnb/AWS, *How Airbnb uses cost per task to operate coding agents on Amazon Bedrock* (2026-11-18): https://aws.amazon.com/blogs/machine-learning/how-airbnb-uses-cost-per-task-to-operate-coding-agents-on-amazon-bedrock/
+
 ## Why it is useful
 
 The core decision rule is:

@@ -21,6 +21,7 @@ The prompt lives in Git deliberately. A scheduled ChatGPT task can stay small an
 
 Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/). These are meant to be readable summaries of what the run actually taught us; the full discovery/synthesis stays under [`intakes/`](intakes/).
 
+- [2026-11-21 — Caller-scoped agent authority, caching and live costs](briefs/2026-11-21.md)
 - [2026-11-17 — Independent evidence before autonomous scale](briefs/2026-11-17.md)
 - [2026-11-13 — Three states an agent must restore or verify](briefs/2026-11-13.md)
 - [2026-11-09 — Bind engineering decisions to verified versions](briefs/2026-11-09.md)
@@ -61,14 +62,17 @@ Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/
 
 ### Spring / AI
 
-- [`Spring AI ordered message parts and durable sessions`](topics/spring/spring-ai-session-parts-replay.md) — preserve signed reasoning and tool-call order, JDBC session events and turn-safe compaction in a 2.1 RC pilot.
+- [`Spring AI modern MCP caller-scoped clients`](topics/spring/spring-ai-modern-mcp-client-scope.md) — choose per-request or per-principal MCP discovery/invocation identity and test private tool-list isolation, credential revocation and blocking callback resolution.
+- [`Spring AI Redis semantic cache isolation`](topics/spring/spring-ai-semantic-cache-scope.md) — scope semantic cache hits to trusted user/entitlement context in Spring AI 2.1/2.0.3 and test cross-tenant collisions, TTL and bypasses.
+- [`Spring AI ordered message parts and durable sessions`](topics/spring/spring-ai-session-parts-replay.md) — preserve signed reasoning and tool-call order, JDBC session events and turn-safe compaction in Spring AI 2.1 GA with replay and identity checks.
 - [`Spring AI HyDE query transformation`](topics/spring/spring-ai-hyde-retrieval.md) — turn conversational questions into answer-like retrieval queries when user vocabulary does not match indexed documentation; keep the hypothetical text out of answer evidence.
 - [`Spring AI structured output validation and self-correction`](topics/spring/spring-ai-structured-output-validation.md) — combine provider-native schema enforcement with bounded response validation/retry for typed LLM outputs.
 - [`Spring AI ToolSearchToolCallingAdvisor`](topics/spring/spring-ai-tool-search-advisor.md) — progressively disclose tools instead of injecting a large tool catalog into every model request.
-- [`Spring AI TypeSafe Jev decision gates`](topics/spring/spring-ai-typesafe-jev-decision-gates.md) — use typed judgements for routing, evaluation and bounded refinement when the desired output is a decision rather than generated prose.
+- [`Spring AI 2.1 DecisionModel typed decision gates`](topics/spring/spring-ai-typesafe-jev-decision-gates.md) — migrate Jev/TypeSafe-specific integrations to core typed decisions with refusal handling, calibrated thresholds and separate community extensions.
 
 ### Coding agents / AI protocols
 
+- [`Event-triggered infrastructure agents with PR-first plan gates`](topics/ai/event-triggered-infrastructure-agent-pr-gates.md) — investigate alerts with scoped read-only access and propose versioned IaC changes behind an independent preview, policy and deployment authority.
 - [`Reference-oracle autonomous agent factory`](topics/ai/reference-oracle-autonomous-agent-factory.md) — independent reference-validated tests, issue finders and bounded fixers behind conformance and merge gates.
 - [`Evidence-gated production agent quality outer loop`](topics/ai/production-agent-quality-outer-loop.md) — sample deployed trajectories, cluster recurring failures, independently verify and diagnose against immutable deployed source.
 - [`Checkpoint agent sandbox OS state at turn boundaries`](topics/ai/agent-sandbox-turn-checkpoint-restore.md) — use eBPF-guided ZFS/CRIU savepoints to restore local files/processes without confusing rollback with external side effects.
