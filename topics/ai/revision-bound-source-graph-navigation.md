@@ -60,6 +60,19 @@ Use a local ablation with real repo questions:
 4. Score top-k true-location recall, incorrect impact links, first-use latency, p95, token cost, actual successful edits and tests, and time spent verifying false leads.
 5. Break the parser intentionally or exclude a module; require coverage/warnings to be visible rather than silently treating missing edges as zero callers.
 
+## Compiler-resolved Java transformations (Dukehoff MCP, 2026-11-25)
+
+When the task changes a Java symbol rather than just locating it, consider the open-source Dukehoff MCP server (Apache NetBeans/javac-based, JDK 17+, Maven/Gradle/Ant). Install a vetted pinned release into the sandbox; generate the client registration with `dukehoff-mcp --config codex` (or the supported client name). The project documents tool group selection, e.g. `--config claude --tools core,refactor`. Prefer read-only tools in planning; mutation tools must be constrained to the candidate worktree and require the same write authority as any editor.
+
+- Start with `workspace_status` to confirm project roots/index readiness, then `find_usages` (optionally grouped by caller), `outline`, and `diagnostics`.
+- Use `rename` or `change_signature` for overloaded/overridden Java methods; they use the refactoring engine and write files. Inspect the returned diff and remaining string references; reflection, Spring configuration, generated code, serialization names and external consumers still need separate checks.
+- For structural migrations, `apply_rule` supports dry runs, path scope and rule packs (junit5, jakarta, modernize). Preview and inspect affected files before applying; finish reported manual edits. Do not treat arbitrary model-authored rewrite rules as trusted executable configuration.
+- After mutations, run git diff, compile and real targeted tests. An IDE's diagnostics are not a full build or a security check. Keep tool processes isolated per worktree or verify their exact workspace before every mutation.
+
+The maintainer's September eval on a NetBeans checkout reported 344 seconds to cold-index 158 projects and approximately 13 seconds for one semantic usage query; those are vendor measurements on one setup, not proof of general speedup. Compare 15 paired tasks with same model (overloads, overrides, multi-module rename and reflection/config cases). Record cold/warm latency, changed incorrect references, actual build/tests, review time and missed dynamic uses. This is an extension of the graph experiment, not a replacement for grep or independent verification.
+
+Sources (October 18 release and implementation): https://dukehoff.com/en/blog/dukehoff-mcp-for-java/ ; https://github.com/dukehoff-gmbh/dukehoff-mcp ; https://github.com/dukehoff-gmbh/dukehoff-mcp/blob/main/eval/RESULTS.md
+
 ## Failure modes
 
 - Graph completeness varies by language and framework; Java reflection, Spring dependency injection, generated bindings and dynamic dispatch can hide edges. **Missing graph edges do not prove absence of callers.**

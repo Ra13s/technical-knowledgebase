@@ -21,6 +21,7 @@ The prompt lives in Git deliberately. A scheduled ChatGPT task can stay small an
 
 Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/). These are meant to be readable summaries of what the run actually taught us; the full discovery/synthesis stays under [`intakes/`](intakes/).
 
+- [2026-11-25 — Protect whole-goal acceptance and capture direct evidence](briefs/2026-11-25.md)
 - [2026-11-21 — Caller-scoped agent authority, caching and live costs](briefs/2026-11-21.md)
 - [2026-11-17 — Independent evidence before autonomous scale](briefs/2026-11-17.md)
 - [2026-11-13 — Three states an agent must restore or verify](briefs/2026-11-13.md)
@@ -114,6 +115,8 @@ Each completed intake gets a separate chat-style brief under [`briefs/`](briefs/
 
 ### Testing / API contracts
 
+- [`Protected goal-level acceptance contracts`](topics/testing/protected-goal-acceptance-contracts.md) — freeze human-reviewed behavioral fixtures and verify mandatory outcomes against one immutable artifact, not aggregate partial scores.
+- [`JVM CI timeout thread dumps`](topics/testing/jvm-ci-timeout-thread-dumps.md) — capture JVM stacks before Surefire/Failsafe or CI kills hung test processes; preserve bounded diagnostics.
 - [`Gate agent-generated tests with reference validity and mutants`](topics/testing/agent-generated-test-mutation-gates.md) — reject tests that pass but cannot catch independent requirement defects; pilot with TestSuiteBench and PIT.
 - [`Record/replay AI model calls with request-signed cassettes`](topics/testing/ai-model-vcr-record-replay-tests.md) — record realistic Spring AI/LangChain4j provider interactions once, then use strict request-matched playback for deterministic offline CI while keeping live evals separate.
 - [`Microcks Testcontainers contract testing`](topics/testing/microcks-testcontainers-contract-tests.md) — generate mocks and provider conformance tests from the same OpenAPI/AsyncAPI artifact inside local JUnit/CI tests.
